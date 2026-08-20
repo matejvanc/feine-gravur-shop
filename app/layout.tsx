@@ -23,7 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: new URL(origin),
     title: "Feine Gravur | Personalisierte Geschenke",
     description:
-      "Deutscher E-Shop-Prototyp für personalisierte Geschenkprodukte mit Namensgravur, Logo-Auswahl und Warenkorb.",
+      "Deutscher E-Shop-Prototyp für Weihnachtskugeln, Holz-Lesezeichen, Anhänger, Flaschenöffner und Kugelschreiber mit Gravur.",
     icons: {
       icon: "/favicon.svg",
       shortcut: "/favicon.svg",
@@ -31,7 +31,7 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: "Feine Gravur | Personalisierte Geschenke",
       description:
-        "Konfigurierbare Geschenkprodukte mit eigener Namensgravur und Logo-Motiv.",
+        "Konfigurierbare Gravurgeschenke mit eigener Namensgravur und Logo-Motiv.",
       images: [
         {
           url: `${origin}/og.png`,
@@ -45,7 +45,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title: "Feine Gravur | Personalisierte Geschenke",
       description:
-        "Konfigurierbare Geschenkprodukte mit eigener Namensgravur und Logo-Motiv.",
+        "Konfigurierbare Gravurgeschenke mit eigener Namensgravur und Logo-Motiv.",
       images: [`${origin}/og.png`],
     },
   };

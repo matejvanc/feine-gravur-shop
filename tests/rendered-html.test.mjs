@@ -33,8 +33,14 @@ test("server-renders the German personalized shop", async () => {
   const html = await response.text();
   assert.match(html, /<html[^>]*lang=["']de["']/i);
   assert.match(html, /Feine Gravur/);
-  assert.match(html, /Personalisierte Glas-Weihnachtskugel mit Gravur/);
+  assert.match(html, /Gravierte Weihnachtskugeln/);
+  assert.match(html, /Holz-Lesezeichen/);
+  assert.match(html, /Holz-Anhänger/);
+  assert.match(html, /Holz-Flaschenöffner/);
+  assert.match(html, /Holz-Kugelschreiber/);
   assert.match(html, /Logo-Motiv/);
+  assert.match(html, /Text bis[\s\S]*12[\s\S]*Zeichen/);
+  assert.match(html, /Allgemeine Geschäftsbedingungen/);
   assert.match(html, /In den Warenkorb/);
   assert.match(html, /Warenkorb/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|react-loading-skeleton/i);
@@ -47,6 +53,8 @@ test("starter preview files and dependencies are removed", async () => {
     readFile(new URL("../package.json", import.meta.url), "utf8"),
   ]);
 
+  assert.match(page, /const TEXT_LIMIT = 12;/);
+  assert.match(page, /maxLength={TEXT_LIMIT}/);
   assert.doesNotMatch(page, /_sites-preview|SkeletonPreview|codex-preview/);
   assert.doesNotMatch(layout, /Starter Project|codex-preview/);
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);
