@@ -1,182 +1,1118 @@
 "use client";
 
-import { type CSSProperties, type FormEvent, useMemo, useState } from "react";
+import {
+  type CSSProperties,
+  type FormEvent,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 const TEXT_LIMIT = 12;
 
+type LanguageCode = "de" | "en" | "cs" | "fr" | "it";
+
+const languages: Array<{ code: LanguageCode; label: string; name: string }> = [
+  { code: "de", label: "DE", name: "Deutsch" },
+  { code: "en", label: "EN", name: "English" },
+  { code: "cs", label: "CS", name: "Čeština" },
+  { code: "fr", label: "FR", name: "Français" },
+  { code: "it", label: "IT", name: "Italiano" },
+];
+
+const localeByLanguage: Record<LanguageCode, string> = {
+  de: "de-DE",
+  en: "en-GB",
+  cs: "cs-CZ",
+  fr: "fr-FR",
+  it: "it-IT",
+};
+
+const ui = {
+  de: {
+    pageTitle: "Feine Gravur | Personalisierte Geschenke",
+    notice:
+      "Personalisierte Gravurgeschenke - deutsche Shopoberfläche, Produkttexte und Zahlarten werden im nächsten Schritt finalisiert.",
+    brandSubtitle: "Personalisierte Geschenke",
+    nav: {
+      configurator: "Konfigurator",
+      assortment: "Sortiment",
+      details: "Details",
+      terms: "AGB",
+    },
+    languageLabel: "Sprache wechseln",
+    cartTitle: "Warenkorb",
+    breadcrumbs: "Startseite / Personalisierte Gravurgeschenke",
+    textLimit: `Text bis ${TEXT_LIMIT} Zeichen`,
+    taxNote: "inkl. MwSt., zzgl. Versand",
+    customTextLabel: "Name oder kurzer Text",
+    customTextPlaceholder: "z. B. Emilia",
+    logoLabel: "Logo-Motiv",
+    previewLabel: "Gravurvorschau",
+    previewFallback: "Name",
+    quantity: "Menge",
+    decreaseQuantity: "Menge verringern",
+    increaseQuantity: "Menge erhöhen",
+    addToCart: "In den Warenkorb",
+    cartHeading: "Aktuelle Auswahl",
+    emptyCart: "Noch kein personalisiertes Produkt im Warenkorb.",
+    subtotal: "Zwischensumme",
+    checkoutSoon: "Checkout folgt",
+    mainPhoto: "Hauptfoto",
+    detailPhoto: "Detail",
+    selectProduct: "Auswählen",
+    service: [
+      ["Kurze Personalisierung", "Bis 12 Zeichen für saubere Gravurflächen."],
+      ["Ausgewählte Motive", "Logo-Auswahl pro Geschenk kombinierbar."],
+      ["Mehrere Produktlinien", "Weihnachten, Lesen, Schlüssel und Holzschreibwaren."],
+    ],
+    assortmentKicker: "Sortiment",
+    assortmentTitle: "Personalisierbare Produkte",
+    detailsKicker: "Produktdetails",
+    detailsTitle: "Vorbereitet für den Verkauf",
+    detailCards: [
+      [
+        "Personalisierung",
+        "Jedes Produkt nutzt denselben Bestellfluss: Text eingeben, Motiv wählen, Ausführung auswählen und in den Warenkorb legen.",
+      ],
+      [
+        "Produktdaten",
+        "Preise, Maße und Materialien sind als Produktdaten angelegt und können später direkt pro Artikel finalisiert werden.",
+      ],
+      [
+        "Bestellung",
+        "Der Checkout bleibt vorbereitet, bis Zahlungsarten, Versandkosten und rechtliche Pflichtangaben final feststehen.",
+      ],
+    ],
+    termsKicker: "AGB",
+    termsTitle: "Allgemeine Geschäftsbedingungen",
+    terms: [
+      [
+        "1. Geltungsbereich",
+        "Diese Bedingungen gelten für Bestellungen im Online-Shop Feine Gravur. Abweichende Regelungen gelten nur, wenn sie schriftlich bestätigt wurden.",
+      ],
+      [
+        "2. Bestellung",
+        "Kundinnen und Kunden wählen Produkt, Menge und Personalisierung aus. Vor dem Absenden können Eingaben geprüft und korrigiert werden.",
+      ],
+      [
+        "3. Personalisierte Waren",
+        "Gravierte Artikel werden nach Kundenvorgabe gefertigt. Schreibfehler in übermittelten Texten werden nur korrigiert, wenn sie vor Produktionsbeginn gemeldet werden.",
+      ],
+      [
+        "4. Preise und Zahlung",
+        "Alle Preise verstehen sich inklusive gesetzlicher Umsatzsteuer zuzüglich Versandkosten. Die verfügbaren Zahlungsarten werden im Checkout angezeigt.",
+      ],
+      [
+        "5. Lieferung",
+        "Die Lieferzeit richtet sich nach Produkt und Auftragslage. Verzögerungen durch unklare Personalisierungsangaben können die Fertigung verlängern.",
+      ],
+      [
+        "6. Gewährleistung",
+        "Es gelten die gesetzlichen Gewährleistungsrechte. Bei Transportschäden oder Produktionsfehlern bitten wir um eine zeitnahe Nachricht mit Foto.",
+      ],
+    ],
+    termsNote:
+      "Mustertext für den Prototyp. Firmenangaben, Widerrufsbelehrung, Datenschutz, Versand und Zahlungsarten sollten vor Veröffentlichung rechtlich geprüft und ergänzt werden.",
+    footerSubtitle: "Demo-Shop für personalisierte Gravurgeschenke",
+  },
+  en: {
+    pageTitle: "Feine Gravur | Personalised Gifts",
+    notice:
+      "Personalised engraved gifts - product copy, payment methods and final shop details will be completed in the next step.",
+    brandSubtitle: "Personalised gifts",
+    nav: {
+      configurator: "Configurator",
+      assortment: "Products",
+      details: "Details",
+      terms: "Terms",
+    },
+    languageLabel: "Change language",
+    cartTitle: "Cart",
+    breadcrumbs: "Home / Personalised engraved gifts",
+    textLimit: `Text up to ${TEXT_LIMIT} characters`,
+    taxNote: "incl. VAT, plus shipping",
+    customTextLabel: "Name or short text",
+    customTextPlaceholder: "e.g. Emilia",
+    logoLabel: "Logo motif",
+    previewLabel: "Engraving preview",
+    previewFallback: "Name",
+    quantity: "Quantity",
+    decreaseQuantity: "Decrease quantity",
+    increaseQuantity: "Increase quantity",
+    addToCart: "Add to cart",
+    cartHeading: "Current selection",
+    emptyCart: "No personalised product in the cart yet.",
+    subtotal: "Subtotal",
+    checkoutSoon: "Checkout coming soon",
+    mainPhoto: "Main photo",
+    detailPhoto: "Detail",
+    selectProduct: "Select",
+    service: [
+      ["Short personalisation", "Up to 12 characters for clean engraving areas."],
+      ["Selected motifs", "Combine each gift with a logo motif from the range."],
+      ["Several product lines", "Christmas, reading, keychains and wooden stationery."],
+    ],
+    assortmentKicker: "Products",
+    assortmentTitle: "Personalised products",
+    detailsKicker: "Product details",
+    detailsTitle: "Prepared for selling",
+    detailCards: [
+      [
+        "Personalisation",
+        "Every product uses the same order flow: enter text, choose a motif, select a finish and add it to the cart.",
+      ],
+      [
+        "Product data",
+        "Prices, dimensions and materials are stored as product data and can be finalised per item later.",
+      ],
+      [
+        "Ordering",
+        "Checkout is prepared and waiting for payment methods, shipping prices and final legal details.",
+      ],
+    ],
+    termsKicker: "Terms",
+    termsTitle: "General Terms and Conditions",
+    terms: [
+      [
+        "1. Scope",
+        "These terms apply to orders placed in the Feine Gravur online shop. Different arrangements apply only when confirmed in writing.",
+      ],
+      [
+        "2. Orders",
+        "Customers choose the product, quantity and personalisation. Entries can be reviewed and corrected before submission.",
+      ],
+      [
+        "3. Personalised goods",
+        "Engraved items are made according to customer instructions. Spelling errors in submitted text can only be corrected before production begins.",
+      ],
+      [
+        "4. Prices and payment",
+        "All prices include statutory VAT and exclude shipping costs. Available payment methods will be shown during checkout.",
+      ],
+      [
+        "5. Delivery",
+        "Delivery time depends on the product and workload. Unclear personalisation details may extend production time.",
+      ],
+      [
+        "6. Warranty",
+        "Statutory warranty rights apply. For transport damage or production defects, please contact us promptly with a photo.",
+      ],
+    ],
+    termsNote:
+      "Sample text for the prototype. Business details, withdrawal policy, privacy, shipping and payment methods should be legally checked and completed before publication.",
+    footerSubtitle: "Demo shop for personalised engraved gifts",
+  },
+  cs: {
+    pageTitle: "Feine Gravur | Personalizované dárky",
+    notice:
+      "Personalizované gravírované dárky - produktové texty, platební metody a finální údaje obchodu doplníme v dalším kroku.",
+    brandSubtitle: "Personalizované dárky",
+    nav: {
+      configurator: "Konfigurátor",
+      assortment: "Produkty",
+      details: "Detaily",
+      terms: "Podmínky",
+    },
+    languageLabel: "Změnit jazyk",
+    cartTitle: "Košík",
+    breadcrumbs: "Úvod / Personalizované gravírované dárky",
+    textLimit: `Text do ${TEXT_LIMIT} znaků`,
+    taxNote: "včetně DPH, bez dopravy",
+    customTextLabel: "Jméno nebo krátký text",
+    customTextPlaceholder: "např. Emilia",
+    logoLabel: "Logo motiv",
+    previewLabel: "Náhled gravírování",
+    previewFallback: "Jméno",
+    quantity: "Množství",
+    decreaseQuantity: "Snížit množství",
+    increaseQuantity: "Zvýšit množství",
+    addToCart: "Přidat do košíku",
+    cartHeading: "Aktuální výběr",
+    emptyCart: "V košíku zatím není žádný personalizovaný produkt.",
+    subtotal: "Mezisoučet",
+    checkoutSoon: "Checkout doplníme",
+    mainPhoto: "Hlavní foto",
+    detailPhoto: "Detail",
+    selectProduct: "Vybrat",
+    service: [
+      ["Krátká personalizace", "Do 12 znaků pro čisté gravírovací plochy."],
+      ["Vybrané motivy", "Logo motiv lze kombinovat s každým dárkem."],
+      ["Více produktových řad", "Vánoce, čtení, přívěšky a dřevěné psací potřeby."],
+    ],
+    assortmentKicker: "Produkty",
+    assortmentTitle: "Personalizovatelné produkty",
+    detailsKicker: "Produktové detaily",
+    detailsTitle: "Připraveno pro prodej",
+    detailCards: [
+      [
+        "Personalizace",
+        "Každý produkt používá stejný objednávkový postup: zadat text, vybrat motiv, zvolit provedení a vložit do košíku.",
+      ],
+      [
+        "Produktová data",
+        "Ceny, rozměry a materiály jsou uložené jako produktová data a půjdou později doladit pro každý artikl.",
+      ],
+      [
+        "Objednávka",
+        "Checkout je připravený a čeká na platební metody, dopravu a finální právní údaje.",
+      ],
+    ],
+    termsKicker: "Podmínky",
+    termsTitle: "Obecné obchodní podmínky",
+    terms: [
+      [
+        "1. Rozsah platnosti",
+        "Tyto podmínky platí pro objednávky v online obchodě Feine Gravur. Odlišná ujednání platí pouze tehdy, pokud byla písemně potvrzena.",
+      ],
+      [
+        "2. Objednávka",
+        "Zákazníci vybírají produkt, množství a personalizaci. Před odesláním lze údaje zkontrolovat a opravit.",
+      ],
+      [
+        "3. Personalizované zboží",
+        "Gravírované produkty se vyrábějí podle zadání zákazníka. Překlepy v odeslaném textu lze opravit jen před zahájením výroby.",
+      ],
+      [
+        "4. Ceny a platba",
+        "Všechny ceny jsou uvedeny včetně zákonné DPH a bez dopravy. Dostupné platební metody se zobrazí v checkoutu.",
+      ],
+      [
+        "5. Dodání",
+        "Doba dodání závisí na produktu a vytížení výroby. Nejasné údaje k personalizaci mohou výrobu prodloužit.",
+      ],
+      [
+        "6. Záruka",
+        "Platí zákonná práva z vadného plnění. U poškození při dopravě nebo výrobní vady prosíme o rychlou zprávu s fotografií.",
+      ],
+    ],
+    termsNote:
+      "Vzorový text pro prototyp. Údaje firmy, odstoupení od smlouvy, ochranu osobních údajů, dopravu a platby je potřeba před zveřejněním právně zkontrolovat a doplnit.",
+    footerSubtitle: "Demo obchod pro personalizované gravírované dárky",
+  },
+  fr: {
+    pageTitle: "Feine Gravur | Cadeaux personnalisés",
+    notice:
+      "Cadeaux gravés personnalisés - les textes produits, les moyens de paiement et les informations finales de la boutique seront complétés ensuite.",
+    brandSubtitle: "Cadeaux personnalisés",
+    nav: {
+      configurator: "Configurateur",
+      assortment: "Produits",
+      details: "Détails",
+      terms: "CGV",
+    },
+    languageLabel: "Changer de langue",
+    cartTitle: "Panier",
+    breadcrumbs: "Accueil / Cadeaux gravés personnalisés",
+    textLimit: `Texte jusqu'à ${TEXT_LIMIT} caractères`,
+    taxNote: "TVA incluse, hors livraison",
+    customTextLabel: "Nom ou texte court",
+    customTextPlaceholder: "p. ex. Emilia",
+    logoLabel: "Motif logo",
+    previewLabel: "Aperçu de gravure",
+    previewFallback: "Nom",
+    quantity: "Quantité",
+    decreaseQuantity: "Réduire la quantité",
+    increaseQuantity: "Augmenter la quantité",
+    addToCart: "Ajouter au panier",
+    cartHeading: "Sélection actuelle",
+    emptyCart: "Aucun produit personnalisé dans le panier pour le moment.",
+    subtotal: "Sous-total",
+    checkoutSoon: "Paiement à venir",
+    mainPhoto: "Photo principale",
+    detailPhoto: "Détail",
+    selectProduct: "Choisir",
+    service: [
+      ["Personnalisation courte", "Jusqu'à 12 caractères pour une gravure nette."],
+      ["Motifs sélectionnés", "Associez chaque cadeau à un motif de la sélection."],
+      ["Plusieurs gammes", "Noël, lecture, porte-clés et papeterie en bois."],
+    ],
+    assortmentKicker: "Produits",
+    assortmentTitle: "Produits personnalisables",
+    detailsKicker: "Détails produit",
+    detailsTitle: "Prêt pour la vente",
+    detailCards: [
+      [
+        "Personnalisation",
+        "Chaque produit suit le même parcours: saisir le texte, choisir un motif, sélectionner une finition et ajouter au panier.",
+      ],
+      [
+        "Données produit",
+        "Les prix, dimensions et matériaux sont enregistrés comme données produit et pourront être finalisés article par article.",
+      ],
+      [
+        "Commande",
+        "Le paiement est préparé et attend les moyens de paiement, les frais de livraison et les mentions légales finales.",
+      ],
+    ],
+    termsKicker: "CGV",
+    termsTitle: "Conditions générales de vente",
+    terms: [
+      [
+        "1. Champ d'application",
+        "Ces conditions s'appliquent aux commandes passées dans la boutique en ligne Feine Gravur. Les dispositions différentes ne s'appliquent que si elles sont confirmées par écrit.",
+      ],
+      [
+        "2. Commande",
+        "Les clients choisissent le produit, la quantité et la personnalisation. Les informations peuvent être vérifiées et corrigées avant l'envoi.",
+      ],
+      [
+        "3. Produits personnalisés",
+        "Les articles gravés sont fabriqués selon les indications du client. Les erreurs dans le texte transmis ne peuvent être corrigées qu'avant le début de la production.",
+      ],
+      [
+        "4. Prix et paiement",
+        "Tous les prix incluent la TVA légale et n'incluent pas les frais de livraison. Les moyens de paiement disponibles seront affichés au paiement.",
+      ],
+      [
+        "5. Livraison",
+        "Le délai de livraison dépend du produit et de la charge de production. Des informations de personnalisation imprécises peuvent prolonger la fabrication.",
+      ],
+      [
+        "6. Garantie",
+        "Les droits légaux de garantie s'appliquent. En cas de dommage de transport ou de défaut de fabrication, merci de nous contacter rapidement avec une photo.",
+      ],
+    ],
+    termsNote:
+      "Texte exemple pour le prototype. Les informations de l'entreprise, le droit de rétractation, la confidentialité, la livraison et les moyens de paiement doivent être vérifiés juridiquement et complétés avant publication.",
+    footerSubtitle: "Boutique démo de cadeaux gravés personnalisés",
+  },
+  it: {
+    pageTitle: "Feine Gravur | Regali personalizzati",
+    notice:
+      "Regali incisi personalizzati - testi prodotto, metodi di pagamento e dettagli finali del negozio saranno completati nel prossimo passaggio.",
+    brandSubtitle: "Regali personalizzati",
+    nav: {
+      configurator: "Configuratore",
+      assortment: "Prodotti",
+      details: "Dettagli",
+      terms: "Condizioni",
+    },
+    languageLabel: "Cambia lingua",
+    cartTitle: "Carrello",
+    breadcrumbs: "Home / Regali incisi personalizzati",
+    textLimit: `Testo fino a ${TEXT_LIMIT} caratteri`,
+    taxNote: "IVA inclusa, spedizione esclusa",
+    customTextLabel: "Nome o testo breve",
+    customTextPlaceholder: "es. Emilia",
+    logoLabel: "Motivo logo",
+    previewLabel: "Anteprima incisione",
+    previewFallback: "Nome",
+    quantity: "Quantità",
+    decreaseQuantity: "Diminuire quantità",
+    increaseQuantity: "Aumentare quantità",
+    addToCart: "Aggiungi al carrello",
+    cartHeading: "Selezione attuale",
+    emptyCart: "Nessun prodotto personalizzato nel carrello.",
+    subtotal: "Subtotale",
+    checkoutSoon: "Checkout in arrivo",
+    mainPhoto: "Foto principale",
+    detailPhoto: "Dettaglio",
+    selectProduct: "Scegli",
+    service: [
+      ["Personalizzazione breve", "Fino a 12 caratteri per aree di incisione pulite."],
+      ["Motivi selezionati", "Abbina ogni regalo a un motivo logo della selezione."],
+      ["Più linee prodotto", "Natale, lettura, portachiavi e articoli in legno."],
+    ],
+    assortmentKicker: "Prodotti",
+    assortmentTitle: "Prodotti personalizzabili",
+    detailsKicker: "Dettagli prodotto",
+    detailsTitle: "Pronto per la vendita",
+    detailCards: [
+      [
+        "Personalizzazione",
+        "Ogni prodotto usa lo stesso flusso d'ordine: inserisci il testo, scegli un motivo, seleziona la finitura e aggiungi al carrello.",
+      ],
+      [
+        "Dati prodotto",
+        "Prezzi, dimensioni e materiali sono salvati come dati prodotto e potranno essere finalizzati per ogni articolo.",
+      ],
+      [
+        "Ordine",
+        "Il checkout è pronto e attende metodi di pagamento, costi di spedizione e informazioni legali finali.",
+      ],
+    ],
+    termsKicker: "Condizioni",
+    termsTitle: "Condizioni generali di vendita",
+    terms: [
+      [
+        "1. Ambito",
+        "Queste condizioni si applicano agli ordini effettuati nel negozio online Feine Gravur. Accordi diversi valgono solo se confermati per iscritto.",
+      ],
+      [
+        "2. Ordine",
+        "I clienti scelgono prodotto, quantità e personalizzazione. I dati possono essere controllati e corretti prima dell'invio.",
+      ],
+      [
+        "3. Prodotti personalizzati",
+        "Gli articoli incisi vengono realizzati secondo le indicazioni del cliente. Errori nel testo inviato possono essere corretti solo prima dell'inizio della produzione.",
+      ],
+      [
+        "4. Prezzi e pagamento",
+        "Tutti i prezzi includono l'IVA di legge e non includono la spedizione. I metodi di pagamento disponibili saranno mostrati nel checkout.",
+      ],
+      [
+        "5. Consegna",
+        "Il tempo di consegna dipende dal prodotto e dal carico di lavoro. Dati di personalizzazione poco chiari possono prolungare la produzione.",
+      ],
+      [
+        "6. Garanzia",
+        "Si applicano i diritti di garanzia previsti dalla legge. In caso di danni da trasporto o difetti di produzione, contattaci presto con una foto.",
+      ],
+    ],
+    termsNote:
+      "Testo campione per il prototipo. Dati aziendali, diritto di recesso, privacy, spedizione e metodi di pagamento devono essere verificati legalmente e completati prima della pubblicazione.",
+    footerSubtitle: "Demo shop per regali incisi personalizzati",
+  },
+};
+
 const logoOptions = [
-  { id: "herz", label: "Herz", mark: "♡" },
-  { id: "sterne", label: "Sterne", mark: "✦" },
-  { id: "pfote", label: "Pfote", mark: "●" },
-  { id: "buch", label: "Buch", mark: "▱" },
-  { id: "initiale", label: "Initiale", mark: "A" },
-  { id: "lineart", label: "Line-Art", mark: "◎" },
+  {
+    id: "herz",
+    mark: "♡",
+    label: { de: "Herz", en: "Heart", cs: "Srdce", fr: "Cœur", it: "Cuore" },
+  },
+  {
+    id: "sterne",
+    mark: "✦",
+    label: { de: "Sterne", en: "Stars", cs: "Hvězdy", fr: "Étoiles", it: "Stelle" },
+  },
+  {
+    id: "pfote",
+    mark: "●",
+    label: { de: "Pfote", en: "Paw", cs: "Tlapka", fr: "Patte", it: "Zampa" },
+  },
+  {
+    id: "buch",
+    mark: "▱",
+    label: { de: "Buch", en: "Book", cs: "Kniha", fr: "Livre", it: "Libro" },
+  },
+  {
+    id: "initiale",
+    mark: "A",
+    label: { de: "Initiale", en: "Initial", cs: "Iniciála", fr: "Initiale", it: "Iniziale" },
+  },
+  {
+    id: "lineart",
+    mark: "◎",
+    label: { de: "Line-Art", en: "Line art", cs: "Linka", fr: "Line art", it: "Line art" },
+  },
 ];
 
 const products = [
   {
     id: "weihnachtskugeln",
-    category: "Weihnachten",
-    badge: "Saisonfavorit",
-    name: "Gravierte Weihnachtskugeln",
-    shortName: "Weihnachtskugeln",
     price: 7.9,
-    delivery: "4-7 Werktage",
-    material: "Glas oder Holz",
-    size: "ca. 8 cm",
     previewClass: "circle",
-    lead:
-      "Personalisierte Weihnachtskugeln mit Name, Kurztext und gewähltem Motiv. Ideal als kleines Geschenk oder für den eigenen Baum.",
-    personalization: "Name, Jahr, Herz, Sterne oder Wunschmotiv",
-    finishLabel: "Farbe / Form",
+    translations: {
+      de: {
+        category: "Weihnachten",
+        badge: "Saisonfavorit",
+        name: "Gravierte Weihnachtskugeln",
+        shortName: "Weihnachtskugeln",
+        delivery: "4-7 Werktage",
+        material: "Glas oder Holz",
+        size: "ca. 8 cm",
+        lead:
+          "Personalisierte Weihnachtskugeln mit Name, Kurztext und gewähltem Motiv. Ideal als kleines Geschenk oder für den eigenen Baum.",
+        personalization: "Name, Jahr, Herz, Sterne oder Wunschmotiv",
+        finishLabel: "Farbe / Form",
+      },
+      en: {
+        category: "Christmas",
+        badge: "Season favourite",
+        name: "Engraved Christmas Baubles",
+        shortName: "Baubles",
+        delivery: "4-7 working days",
+        material: "Glass or wood",
+        size: "approx. 8 cm",
+        lead:
+          "Personalised Christmas baubles with a name, short text and chosen motif. Perfect as a small gift or for your own tree.",
+        personalization: "Name, year, heart, stars or custom motif",
+        finishLabel: "Colour / shape",
+      },
+      cs: {
+        category: "Vánoce",
+        badge: "Sezónní favorit",
+        name: "Gravírované vánoční ozdoby",
+        shortName: "Vánoční ozdoby",
+        delivery: "4-7 pracovních dnů",
+        material: "Sklo nebo dřevo",
+        size: "cca 8 cm",
+        lead:
+          "Personalizované vánoční ozdoby se jménem, krátkým textem a vybraným motivem. Ideální jako malý dárek nebo na vlastní stromek.",
+        personalization: "Jméno, rok, srdce, hvězdy nebo vlastní motiv",
+        finishLabel: "Barva / tvar",
+      },
+      fr: {
+        category: "Noël",
+        badge: "Favori de saison",
+        name: "Boules de Noël gravées",
+        shortName: "Boules de Noël",
+        delivery: "4-7 jours ouvrés",
+        material: "Verre ou bois",
+        size: "env. 8 cm",
+        lead:
+          "Boules de Noël personnalisées avec prénom, texte court et motif choisi. Idéales comme petit cadeau ou pour votre propre sapin.",
+        personalization: "Prénom, année, cœur, étoiles ou motif au choix",
+        finishLabel: "Couleur / forme",
+      },
+      it: {
+        category: "Natale",
+        badge: "Preferito stagionale",
+        name: "Palline di Natale incise",
+        shortName: "Palline di Natale",
+        delivery: "4-7 giorni lavorativi",
+        material: "Vetro o legno",
+        size: "ca. 8 cm",
+        lead:
+          "Palline di Natale personalizzate con nome, testo breve e motivo scelto. Perfette come piccolo regalo o per il proprio albero.",
+        personalization: "Nome, anno, cuore, stelle o motivo personalizzato",
+        finishLabel: "Colore / forma",
+      },
+    },
     finishes: [
-      { id: "rot", label: "Rot glänzend", hex: "#a8323b", edge: "#681722" },
-      { id: "gold", label: "Gold matt", hex: "#d6b26f", edge: "#8a642d" },
-      { id: "blau", label: "Nachtblau", hex: "#243f6e", edge: "#142642" },
-      { id: "holz", label: "Holz natur", hex: "#d9b982", edge: "#8a6435" },
+      {
+        id: "rot",
+        hex: "#a8323b",
+        edge: "#681722",
+        label: {
+          de: "Rot glänzend",
+          en: "Glossy red",
+          cs: "Lesklá červená",
+          fr: "Rouge brillant",
+          it: "Rosso lucido",
+        },
+      },
+      {
+        id: "gold",
+        hex: "#d6b26f",
+        edge: "#8a642d",
+        label: {
+          de: "Gold matt",
+          en: "Matte gold",
+          cs: "Matná zlatá",
+          fr: "Or mat",
+          it: "Oro opaco",
+        },
+      },
+      {
+        id: "blau",
+        hex: "#243f6e",
+        edge: "#142642",
+        label: {
+          de: "Nachtblau",
+          en: "Midnight blue",
+          cs: "Noční modrá",
+          fr: "Bleu nuit",
+          it: "Blu notte",
+        },
+      },
+      {
+        id: "holz",
+        hex: "#d9b982",
+        edge: "#8a6435",
+        label: {
+          de: "Holz natur",
+          en: "Natural wood",
+          cs: "Přírodní dřevo",
+          fr: "Bois naturel",
+          it: "Legno naturale",
+        },
+      },
     ],
     photos: [
       {
         id: "wrapped",
         src: "/products/christmas-baubles-wrapped.jpeg",
-        alt: "Rote personalisierte Weihnachtskugeln mit Schleife",
+        alt: {
+          de: "Rote personalisierte Weihnachtskugeln mit Schleife",
+          en: "Red personalised Christmas baubles with bows",
+          cs: "Červené personalizované vánoční ozdoby s mašlí",
+          fr: "Boules de Noël rouges personnalisées avec ruban",
+          it: "Palline di Natale rosse personalizzate con fiocco",
+        },
       },
       {
         id: "set",
         src: "/products/christmas-baubles-color-set.jpeg",
-        alt: "Set gravierter Weihnachtskugeln in mehreren Farben",
+        alt: {
+          de: "Set gravierter Weihnachtskugeln in mehreren Farben",
+          en: "Set of engraved Christmas baubles in several colours",
+          cs: "Sada gravírovaných vánočních ozdob v několika barvách",
+          fr: "Lot de boules de Noël gravées en plusieurs couleurs",
+          it: "Set di palline di Natale incise in più colori",
+        },
       },
     ],
   },
   {
     id: "lesezeichen",
-    category: "Lesen",
-    badge: "Mit Quaste",
-    name: "Holz-Lesezeichen",
-    shortName: "Lesezeichen",
     price: 9.9,
-    delivery: "3-6 Werktage",
-    material: "Birkensperrholz",
-    size: "ca. 15 x 4 cm",
     previewClass: "bookmark",
-    lead:
-      "Leichtes Holz-Lesezeichen mit Gravur und farbiger Quaste. Name und Motiv werden passend zur Form gesetzt.",
-    personalization: "Name, kurzer Spruch oder Lesemotiv",
-    finishLabel: "Quaste",
+    translations: {
+      de: {
+        category: "Lesen",
+        badge: "Mit Quaste",
+        name: "Holz-Lesezeichen",
+        shortName: "Lesezeichen",
+        delivery: "3-6 Werktage",
+        material: "Birkensperrholz",
+        size: "ca. 15 x 4 cm",
+        lead:
+          "Leichtes Holz-Lesezeichen mit Gravur und farbiger Quaste. Name und Motiv werden passend zur Form gesetzt.",
+        personalization: "Name, kurzer Spruch oder Lesemotiv",
+        finishLabel: "Quaste",
+      },
+      en: {
+        category: "Reading",
+        badge: "With tassel",
+        name: "Wooden Bookmark",
+        shortName: "Bookmark",
+        delivery: "3-6 working days",
+        material: "Birch plywood",
+        size: "approx. 15 x 4 cm",
+        lead:
+          "Light wooden bookmark with engraving and coloured tassel. Name and motif are placed to suit the shape.",
+        personalization: "Name, short quote or reading motif",
+        finishLabel: "Tassel",
+      },
+      cs: {
+        category: "Čtení",
+        badge: "Se střapcem",
+        name: "Dřevěná záložka",
+        shortName: "Záložka",
+        delivery: "3-6 pracovních dnů",
+        material: "Březová překližka",
+        size: "cca 15 x 4 cm",
+        lead:
+          "Lehká dřevěná záložka s gravírováním a barevným střapcem. Jméno a motiv jsou zasazené podle tvaru.",
+        personalization: "Jméno, krátký citát nebo čtecí motiv",
+        finishLabel: "Střapec",
+      },
+      fr: {
+        category: "Lecture",
+        badge: "Avec pompon",
+        name: "Marque-page en bois",
+        shortName: "Marque-page",
+        delivery: "3-6 jours ouvrés",
+        material: "Contreplaqué de bouleau",
+        size: "env. 15 x 4 cm",
+        lead:
+          "Marque-page léger en bois avec gravure et pompon coloré. Le prénom et le motif sont placés selon la forme.",
+        personalization: "Prénom, courte citation ou motif lecture",
+        finishLabel: "Pompon",
+      },
+      it: {
+        category: "Lettura",
+        badge: "Con nappina",
+        name: "Segnalibro in legno",
+        shortName: "Segnalibro",
+        delivery: "3-6 giorni lavorativi",
+        material: "Compensato di betulla",
+        size: "ca. 15 x 4 cm",
+        lead:
+          "Segnalibro leggero in legno con incisione e nappina colorata. Nome e motivo vengono posizionati in armonia con la forma.",
+        personalization: "Nome, frase breve o motivo lettura",
+        finishLabel: "Nappina",
+      },
+    },
     finishes: [
-      { id: "orange", label: "Orange", hex: "#e59a2f", edge: "#a96513" },
-      { id: "violett", label: "Violett", hex: "#5c3c98", edge: "#362260" },
-      { id: "natur", label: "Naturband", hex: "#c7a577", edge: "#80623f" },
+      {
+        id: "orange",
+        hex: "#e59a2f",
+        edge: "#a96513",
+        label: { de: "Orange", en: "Orange", cs: "Oranžová", fr: "Orange", it: "Arancione" },
+      },
+      {
+        id: "violett",
+        hex: "#5c3c98",
+        edge: "#362260",
+        label: { de: "Violett", en: "Purple", cs: "Fialová", fr: "Violet", it: "Viola" },
+      },
+      {
+        id: "natur",
+        hex: "#c7a577",
+        edge: "#80623f",
+        label: {
+          de: "Naturband",
+          en: "Natural cord",
+          cs: "Přírodní šňůrka",
+          fr: "Cordon naturel",
+          it: "Cordino naturale",
+        },
+      },
     ],
     photos: [
       {
         id: "name",
         src: "/products/wood-bookmark-name.jpeg",
-        alt: "Holz-Lesezeichen mit Namensgravur und gelber Quaste",
+        alt: {
+          de: "Holz-Lesezeichen mit Namensgravur und gelber Quaste",
+          en: "Wooden bookmark with name engraving and yellow tassel",
+          cs: "Dřevěná záložka s gravírovaným jménem a žlutým střapcem",
+          fr: "Marque-page en bois avec prénom gravé et pompon jaune",
+          it: "Segnalibro in legno con nome inciso e nappina gialla",
+        },
       },
       {
         id: "page",
         src: "/products/wood-bookmark-page.jpeg",
-        alt: "Holz-Lesezeichen mit graviertem Lesespruch",
+        alt: {
+          de: "Holz-Lesezeichen mit graviertem Lesespruch",
+          en: "Wooden bookmark with engraved reading quote",
+          cs: "Dřevěná záložka s gravírovaným čtecím nápisem",
+          fr: "Marque-page en bois avec citation de lecture gravée",
+          it: "Segnalibro in legno con frase di lettura incisa",
+        },
       },
     ],
   },
   {
     id: "anhaenger",
-    category: "Schlüssel",
-    badge: "Motivserie",
-    name: "Holz-Anhänger",
-    shortName: "Anhänger",
     price: 8.9,
-    delivery: "3-6 Werktage",
-    material: "Rundes Holzplättchen",
-    size: "ca. 5 cm",
     previewClass: "pendant",
-    lead:
-      "Runder Holz-Anhänger mit feiner Motivgravur. Auf Wunsch mit kurzem Namen auf der Rückseite oder als schlichte Motivserie.",
-    personalization: "Name, Initiale oder Symbol",
-    finishLabel: "Motivwelt",
+    translations: {
+      de: {
+        category: "Schlüssel",
+        badge: "Motivserie",
+        name: "Holz-Anhänger",
+        shortName: "Anhänger",
+        delivery: "3-6 Werktage",
+        material: "Rundes Holzplättchen",
+        size: "ca. 5 cm",
+        lead:
+          "Runder Holz-Anhänger mit feiner Motivgravur. Auf Wunsch mit kurzem Namen auf der Rückseite oder als schlichte Motivserie.",
+        personalization: "Name, Initiale oder Symbol",
+        finishLabel: "Motivwelt",
+      },
+      en: {
+        category: "Keys",
+        badge: "Motif series",
+        name: "Wooden Keychain",
+        shortName: "Keychain",
+        delivery: "3-6 working days",
+        material: "Round wooden disc",
+        size: "approx. 5 cm",
+        lead:
+          "Round wooden keychain with fine motif engraving. Add a short name on the back or keep it as a clean motif piece.",
+        personalization: "Name, initial or symbol",
+        finishLabel: "Motif style",
+      },
+      cs: {
+        category: "Klíče",
+        badge: "Motivová série",
+        name: "Dřevěný přívěšek",
+        shortName: "Přívěšek",
+        delivery: "3-6 pracovních dnů",
+        material: "Kulaté dřevěné kolečko",
+        size: "cca 5 cm",
+        lead:
+          "Kulatý dřevěný přívěšek s jemným gravírovaným motivem. Na přání se jménem na zadní straně nebo jako čistá motivová série.",
+        personalization: "Jméno, iniciála nebo symbol",
+        finishLabel: "Styl motivu",
+      },
+      fr: {
+        category: "Clés",
+        badge: "Série de motifs",
+        name: "Porte-clés en bois",
+        shortName: "Porte-clés",
+        delivery: "3-6 jours ouvrés",
+        material: "Disque rond en bois",
+        size: "env. 5 cm",
+        lead:
+          "Porte-clés rond en bois avec gravure fine. Ajoutez un prénom court au verso ou gardez un motif épuré.",
+        personalization: "Prénom, initiale ou symbole",
+        finishLabel: "Univers motif",
+      },
+      it: {
+        category: "Chiavi",
+        badge: "Serie motivi",
+        name: "Portachiavi in legno",
+        shortName: "Portachiavi",
+        delivery: "3-6 giorni lavorativi",
+        material: "Disco rotondo in legno",
+        size: "ca. 5 cm",
+        lead:
+          "Portachiavi rotondo in legno con fine incisione del motivo. Aggiungi un nome breve sul retro o lascialo come motivo essenziale.",
+        personalization: "Nome, iniziale o simbolo",
+        finishLabel: "Stile motivo",
+      },
+    },
     finishes: [
-      { id: "zodiac", label: "Sternzeichen", hex: "#d8bd8b", edge: "#8d6a37" },
-      { id: "classic", label: "Klassisch", hex: "#cfa66d", edge: "#805a2f" },
-      { id: "minimal", label: "Minimal", hex: "#eee1c6", edge: "#9a7a50" },
+      {
+        id: "zodiac",
+        hex: "#d8bd8b",
+        edge: "#8d6a37",
+        label: { de: "Sternzeichen", en: "Zodiac", cs: "Znamení", fr: "Zodiaque", it: "Zodiaco" },
+      },
+      {
+        id: "classic",
+        hex: "#cfa66d",
+        edge: "#805a2f",
+        label: { de: "Klassisch", en: "Classic", cs: "Klasické", fr: "Classique", it: "Classico" },
+      },
+      {
+        id: "minimal",
+        hex: "#eee1c6",
+        edge: "#9a7a50",
+        label: { de: "Minimal", en: "Minimal", cs: "Minimal", fr: "Minimal", it: "Minimal" },
+      },
     ],
     photos: [
       {
         id: "zodiac",
         src: "/products/wood-pendants-zodiac.jpeg",
-        alt: "Mehrere runde Holz-Anhänger mit gravierten Motiven",
+        alt: {
+          de: "Mehrere runde Holz-Anhänger mit gravierten Motiven",
+          en: "Several round wooden keychains with engraved motifs",
+          cs: "Více kulatých dřevěných přívěšků s gravírovanými motivy",
+          fr: "Plusieurs porte-clés ronds en bois avec motifs gravés",
+          it: "Diversi portachiavi rotondi in legno con motivi incisi",
+        },
       },
       {
         id: "detail",
         src: "/products/wood-pendant-detail.jpeg",
-        alt: "Detailaufnahme eines runden Holz-Anhängers mit Gravur",
+        alt: {
+          de: "Detailaufnahme eines runden Holz-Anhängers mit Gravur",
+          en: "Close-up of a round wooden keychain with engraving",
+          cs: "Detail kulatého dřevěného přívěšku s gravírováním",
+          fr: "Gros plan d'un porte-clés rond en bois gravé",
+          it: "Dettaglio di un portachiavi rotondo in legno inciso",
+        },
       },
     ],
   },
   {
     id: "flaschenoeffner",
-    category: "Geschenke",
-    badge: "Holzgriff",
-    name: "Holz-Flaschenöffner",
-    shortName: "Flaschenöffner",
     price: 14.9,
-    delivery: "4-7 Werktage",
-    material: "Holzgriff & Metallkopf",
-    size: "ca. 14 cm",
     previewClass: "opener",
-    lead:
-      "Stabiler Flaschenöffner mit Holzgriff und persönlicher Gravur. Ein praktisches Geschenk für Feiern, Küche und Grillabende.",
-    personalization: "Name oder kurzer Titel",
-    finishLabel: "Gravurstil",
+    translations: {
+      de: {
+        category: "Geschenke",
+        badge: "Holzgriff",
+        name: "Holz-Flaschenöffner",
+        shortName: "Flaschenöffner",
+        delivery: "4-7 Werktage",
+        material: "Holzgriff & Metallkopf",
+        size: "ca. 14 cm",
+        lead:
+          "Stabiler Flaschenöffner mit Holzgriff und persönlicher Gravur. Ein praktisches Geschenk für Feiern, Küche und Grillabende.",
+        personalization: "Name oder kurzer Titel",
+        finishLabel: "Gravurstil",
+      },
+      en: {
+        category: "Gifts",
+        badge: "Wooden handle",
+        name: "Wooden Bottle Opener",
+        shortName: "Bottle opener",
+        delivery: "4-7 working days",
+        material: "Wooden handle & metal head",
+        size: "approx. 14 cm",
+        lead:
+          "Sturdy bottle opener with wooden handle and personal engraving. A practical gift for parties, kitchens and barbecues.",
+        personalization: "Name or short title",
+        finishLabel: "Engraving style",
+      },
+      cs: {
+        category: "Dárky",
+        badge: "Dřevěná rukojeť",
+        name: "Dřevěný otvírák",
+        shortName: "Otvírák",
+        delivery: "4-7 pracovních dnů",
+        material: "Dřevěná rukojeť a kovová hlavice",
+        size: "cca 14 cm",
+        lead:
+          "Pevný otvírák s dřevěnou rukojetí a osobním gravírováním. Praktický dárek na oslavy, do kuchyně i ke grilu.",
+        personalization: "Jméno nebo krátký titul",
+        finishLabel: "Styl gravírování",
+      },
+      fr: {
+        category: "Cadeaux",
+        badge: "Manche en bois",
+        name: "Décapsuleur en bois",
+        shortName: "Décapsuleur",
+        delivery: "4-7 jours ouvrés",
+        material: "Manche en bois et tête métal",
+        size: "env. 14 cm",
+        lead:
+          "Décapsuleur solide avec manche en bois et gravure personnelle. Un cadeau pratique pour les fêtes, la cuisine et les barbecues.",
+        personalization: "Prénom ou petit titre",
+        finishLabel: "Style de gravure",
+      },
+      it: {
+        category: "Regali",
+        badge: "Manico in legno",
+        name: "Apribottiglie in legno",
+        shortName: "Apribottiglie",
+        delivery: "4-7 giorni lavorativi",
+        material: "Manico in legno e testa in metallo",
+        size: "ca. 14 cm",
+        lead:
+          "Apribottiglie robusto con manico in legno e incisione personale. Un regalo pratico per feste, cucina e grigliate.",
+        personalization: "Nome o titolo breve",
+        finishLabel: "Stile incisione",
+      },
+    },
     finishes: [
-      { id: "script", label: "Schreibschrift", hex: "#bf8f56", edge: "#76512c" },
-      { id: "bold", label: "Kräftig", hex: "#c8a06f", edge: "#7d5632" },
-      { id: "classic", label: "Klassisch", hex: "#d4b785", edge: "#8a673b" },
+      {
+        id: "script",
+        hex: "#bf8f56",
+        edge: "#76512c",
+        label: { de: "Schreibschrift", en: "Script", cs: "Psací písmo", fr: "Écriture", it: "Corsivo" },
+      },
+      {
+        id: "bold",
+        hex: "#c8a06f",
+        edge: "#7d5632",
+        label: { de: "Kräftig", en: "Bold", cs: "Výrazné", fr: "Marqué", it: "Marcato" },
+      },
+      {
+        id: "classic",
+        hex: "#d4b785",
+        edge: "#8a673b",
+        label: { de: "Klassisch", en: "Classic", cs: "Klasické", fr: "Classique", it: "Classico" },
+      },
     ],
     photos: [
       {
         id: "single",
         src: "/products/wood-opener.jpeg",
-        alt: "Holz-Flaschenöffner mit graviertem Namen",
+        alt: {
+          de: "Holz-Flaschenöffner mit graviertem Namen",
+          en: "Wooden bottle opener with engraved name",
+          cs: "Dřevěný otvírák s gravírovaným jménem",
+          fr: "Décapsuleur en bois avec prénom gravé",
+          it: "Apribottiglie in legno con nome inciso",
+        },
       },
       {
         id: "set",
         src: "/products/wood-opener-pen-set.jpeg",
-        alt: "Holz-Flaschenöffner und Holz-Kugelschreiber mit Gravur",
+        alt: {
+          de: "Holz-Flaschenöffner und Holz-Kugelschreiber mit Gravur",
+          en: "Wooden bottle opener and wooden pen with engraving",
+          cs: "Dřevěný otvírák a dřevěná propiska s gravírováním",
+          fr: "Décapsuleur et stylo en bois avec gravure",
+          it: "Apribottiglie e penna in legno con incisione",
+        },
       },
     ],
   },
   {
     id: "kugelschreiber",
-    category: "Schreiben",
-    badge: "Bambusoptik",
-    name: "Holz-Kugelschreiber",
-    shortName: "Kugelschreiber",
     price: 11.9,
-    delivery: "3-6 Werktage",
-    material: "Holz & Metall",
-    size: "ca. 14 cm",
     previewClass: "pen",
-    lead:
-      "Eleganter Kugelschreiber aus Holz mit Namensgravur. Passt als kleines Dankeschön, Firmenpräsent oder persönliches Set.",
-    personalization: "Name oder kurzer Gruß",
-    finishLabel: "Clipfarbe",
+    translations: {
+      de: {
+        category: "Schreiben",
+        badge: "Bambusoptik",
+        name: "Holz-Kugelschreiber",
+        shortName: "Kugelschreiber",
+        delivery: "3-6 Werktage",
+        material: "Holz & Metall",
+        size: "ca. 14 cm",
+        lead:
+          "Eleganter Kugelschreiber aus Holz mit Namensgravur. Passt als kleines Dankeschön, Firmenpräsent oder persönliches Set.",
+        personalization: "Name oder kurzer Gruß",
+        finishLabel: "Clipfarbe",
+      },
+      en: {
+        category: "Writing",
+        badge: "Bamboo look",
+        name: "Wooden Ballpoint Pen",
+        shortName: "Pen",
+        delivery: "3-6 working days",
+        material: "Wood & metal",
+        size: "approx. 14 cm",
+        lead:
+          "Elegant wooden ballpoint pen with name engraving. Ideal as a small thank-you, company gift or personal set.",
+        personalization: "Name or short greeting",
+        finishLabel: "Clip colour",
+      },
+      cs: {
+        category: "Psaní",
+        badge: "Bambusový vzhled",
+        name: "Dřevěná propiska",
+        shortName: "Propiska",
+        delivery: "3-6 pracovních dnů",
+        material: "Dřevo a kov",
+        size: "cca 14 cm",
+        lead:
+          "Elegantní dřevěná propiska s gravírovaným jménem. Hodí se jako drobné poděkování, firemní dárek nebo osobní sada.",
+        personalization: "Jméno nebo krátké věnování",
+        finishLabel: "Barva klipu",
+      },
+      fr: {
+        category: "Écriture",
+        badge: "Aspect bambou",
+        name: "Stylo bille en bois",
+        shortName: "Stylo",
+        delivery: "3-6 jours ouvrés",
+        material: "Bois et métal",
+        size: "env. 14 cm",
+        lead:
+          "Stylo bille élégant en bois avec gravure du prénom. Parfait comme petit merci, cadeau d'entreprise ou ensemble personnel.",
+        personalization: "Prénom ou court message",
+        finishLabel: "Couleur du clip",
+      },
+      it: {
+        category: "Scrittura",
+        badge: "Effetto bambù",
+        name: "Penna a sfera in legno",
+        shortName: "Penna",
+        delivery: "3-6 giorni lavorativi",
+        material: "Legno e metallo",
+        size: "ca. 14 cm",
+        lead:
+          "Elegante penna a sfera in legno con nome inciso. Perfetta come piccolo grazie, regalo aziendale o set personale.",
+        personalization: "Nome o breve dedica",
+        finishLabel: "Colore clip",
+      },
+    },
     finishes: [
-      { id: "silber", label: "Silber", hex: "#d4d8da", edge: "#858c90" },
-      { id: "chrom", label: "Chrom", hex: "#b9c0c2", edge: "#6b7275" },
-      { id: "natur", label: "Natur", hex: "#d7b679", edge: "#8b6332" },
+      {
+        id: "silber",
+        hex: "#d4d8da",
+        edge: "#858c90",
+        label: { de: "Silber", en: "Silver", cs: "Stříbrná", fr: "Argent", it: "Argento" },
+      },
+      {
+        id: "chrom",
+        hex: "#b9c0c2",
+        edge: "#6b7275",
+        label: { de: "Chrom", en: "Chrome", cs: "Chrom", fr: "Chrome", it: "Cromo" },
+      },
+      {
+        id: "natur",
+        hex: "#d7b679",
+        edge: "#8b6332",
+        label: { de: "Natur", en: "Natural", cs: "Přírodní", fr: "Naturel", it: "Naturale" },
+      },
     ],
     photos: [
       {
         id: "single",
         src: "/products/wood-pen.jpeg",
-        alt: "Holz-Kugelschreiber mit graviertem Namen",
+        alt: {
+          de: "Holz-Kugelschreiber mit graviertem Namen",
+          en: "Wooden ballpoint pen with engraved name",
+          cs: "Dřevěná propiska s gravírovaným jménem",
+          fr: "Stylo bille en bois avec prénom gravé",
+          it: "Penna a sfera in legno con nome inciso",
+        },
       },
       {
         id: "set",
         src: "/products/wood-opener-pen-set.jpeg",
-        alt: "Set aus Holz-Kugelschreiber und Flaschenöffner",
+        alt: {
+          de: "Set aus Holz-Kugelschreiber und Flaschenöffner",
+          en: "Set with wooden pen and bottle opener",
+          cs: "Sada dřevěné propisky a otvíráku",
+          fr: "Ensemble stylo en bois et décapsuleur",
+          it: "Set con penna in legno e apribottiglie",
+        },
       },
     ],
   },
@@ -184,16 +1120,16 @@ const products = [
 
 type CartItem = {
   id: number;
-  productName: string;
+  productId: string;
   customText: string;
-  finish: string;
-  logo: string;
+  finishId: string;
+  logoId: string;
   quantity: number;
   price: number;
 };
 
-function formatPrice(value: number) {
-  return new Intl.NumberFormat("de-DE", {
+function formatPrice(value: number, language: LanguageCode) {
+  return new Intl.NumberFormat(localeByLanguage[language], {
     style: "currency",
     currency: "EUR",
   }).format(value);
@@ -203,7 +1139,17 @@ function getProduct(productId: string) {
   return products.find((product) => product.id === productId) ?? products[0];
 }
 
+function getLogo(logoId: string) {
+  return logoOptions.find((logo) => logo.id === logoId) ?? logoOptions[0];
+}
+
+function getFinish(productId: string, finishId: string) {
+  const product = getProduct(productId);
+  return product.finishes.find((finish) => finish.id === finishId) ?? product.finishes[0];
+}
+
 export default function Home() {
+  const [language, setLanguage] = useState<LanguageCode>("de");
   const [selectedProductId, setSelectedProductId] = useState(products[0].id);
   const [selectedPhotoId, setSelectedPhotoId] = useState(products[0].photos[0].id);
   const [selectedFinishId, setSelectedFinishId] = useState(products[0].finishes[0].id);
@@ -212,16 +1158,17 @@ export default function Home() {
   const [quantity, setQuantity] = useState(1);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
+  const t = ui[language];
   const selectedProduct = getProduct(selectedProductId);
+  const selectedProductCopy = selectedProduct.translations[language];
   const selectedPhoto =
     selectedProduct.photos.find((photo) => photo.id === selectedPhotoId) ??
     selectedProduct.photos[0];
   const selectedFinish =
     selectedProduct.finishes.find((finish) => finish.id === selectedFinishId) ??
     selectedProduct.finishes[0];
-  const selectedLogo =
-    logoOptions.find((logo) => logo.id === selectedLogoId) ?? logoOptions[0];
-  const previewText = customText.trim() || "Name";
+  const selectedLogo = getLogo(selectedLogoId);
+  const previewText = customText.trim() || t.previewFallback;
   const previewNameSize =
     previewText.length > 10 ? "0.9rem" : previewText.length > 7 ? "1.04rem" : "1.18rem";
 
@@ -229,6 +1176,11 @@ export default function Home() {
     () => cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
     [cartItems],
   );
+
+  useEffect(() => {
+    document.documentElement.lang = language;
+    document.title = t.pageTitle;
+  }, [language, t.pageTitle]);
 
   function selectProduct(productId: string) {
     const nextProduct = getProduct(productId);
@@ -243,10 +1195,10 @@ export default function Home() {
       ...items,
       {
         id: Date.now(),
-        productName: selectedProduct.shortName,
+        productId: selectedProduct.id,
         customText: previewText,
-        finish: selectedFinish.label,
-        logo: selectedLogo.label,
+        finishId: selectedFinish.id,
+        logoId: selectedLogo.id,
         quantity,
         price: selectedProduct.price,
       },
@@ -255,37 +1207,50 @@ export default function Home() {
 
   return (
     <div className="shop-shell">
-      <div className="top-notice">
-        Personalisierte Gravurgeschenke - deutsche Shopoberfläche, Produkttexte und
-        Zahlarten werden im nächsten Schritt finalisiert.
-      </div>
+      <div className="top-notice">{t.notice}</div>
 
       <header className="shop-header">
-        <a className="brand" href="#produkt" aria-label="Feine Gravur Startseite">
+        <a className="brand" href="#produkt" aria-label="Feine Gravur">
           <span className="brand-mark">FG</span>
           <span>
             <strong>Feine Gravur</strong>
-            <small>Personalisierte Geschenke</small>
+            <small>{t.brandSubtitle}</small>
           </span>
         </a>
-        <nav className="main-nav" aria-label="Hauptnavigation">
-          <a href="#produkt">Konfigurator</a>
-          <a href="#sortiment">Sortiment</a>
-          <a href="#details">Details</a>
-          <a href="#agb">AGB</a>
+        <nav className="main-nav" aria-label={t.nav.configurator}>
+          <a href="#produkt">{t.nav.configurator}</a>
+          <a href="#sortiment">{t.nav.assortment}</a>
+          <a href="#details">{t.nav.details}</a>
+          <a href="#agb">{t.nav.terms}</a>
         </nav>
-        <a className="header-cart" href="#warenkorb">
-          Warenkorb {cartItems.length > 0 ? `(${cartItems.length})` : ""}
-        </a>
+        <div className="header-actions">
+          <div className="language-switcher" aria-label={t.languageLabel}>
+            {languages.map((option) => (
+              <button
+                className={language === option.code ? "selected" : ""}
+                key={option.code}
+                type="button"
+                aria-label={option.name}
+                aria-pressed={language === option.code}
+                onClick={() => setLanguage(option.code)}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+          <a className="header-cart" href="#warenkorb">
+            {t.cartTitle} {cartItems.length > 0 ? `(${cartItems.length})` : ""}
+          </a>
+        </div>
       </header>
 
       <main>
         <section className="product-section" id="produkt" aria-labelledby="product-title">
           <div className="gallery-column">
             <div className="product-photo-frame">
-              <img src={selectedPhoto.src} alt={selectedPhoto.alt} />
+              <img src={selectedPhoto.src} alt={selectedPhoto.alt[language]} />
             </div>
-            <div className="thumb-row" aria-label="Produktansichten">
+            <div className="thumb-row" aria-label={t.detailPhoto}>
               {selectedProduct.photos.map((photo) => (
                 <button
                   className={`thumb-button ${selectedPhoto.id === photo.id ? "active" : ""}`}
@@ -295,15 +1260,17 @@ export default function Home() {
                   onClick={() => setSelectedPhotoId(photo.id)}
                 >
                   <img src={photo.src} alt="" aria-hidden="true" />
-                  <span>{photo.id === selectedProduct.photos[0].id ? "Hauptfoto" : "Detail"}</span>
+                  <span>
+                    {photo.id === selectedProduct.photos[0].id ? t.mainPhoto : t.detailPhoto}
+                  </span>
                 </button>
               ))}
             </div>
           </div>
 
           <div className="purchase-panel">
-            <p className="breadcrumbs">Startseite / Personalisierte Gravurgeschenke</p>
-            <div className="product-switcher" aria-label="Produkt auswählen">
+            <p className="breadcrumbs">{t.breadcrumbs}</p>
+            <div className="product-switcher" aria-label={t.nav.assortment}>
               {products.map((product) => (
                 <button
                   className={selectedProduct.id === product.id ? "selected" : ""}
@@ -312,42 +1279,46 @@ export default function Home() {
                   aria-pressed={selectedProduct.id === product.id}
                   onClick={() => selectProduct(product.id)}
                 >
-                  {product.shortName}
+                  {product.translations[language].shortName}
                 </button>
               ))}
             </div>
 
-            <p className="product-badge">{selectedProduct.badge}</p>
-            <h1 id="product-title">{selectedProduct.name}</h1>
-            <p className="product-lead">{selectedProduct.lead}</p>
+            <p className="product-badge">{selectedProductCopy.badge}</p>
+            <h1 id="product-title">{selectedProductCopy.name}</h1>
+            <p className="product-lead">{selectedProductCopy.lead}</p>
 
             <div className="purchase-meta">
-              <span>{selectedProduct.delivery}</span>
-              <span>{selectedProduct.material}</span>
-              <span>{selectedProduct.size}</span>
-              <span>Text bis {TEXT_LIMIT} Zeichen</span>
+              <span>{selectedProductCopy.delivery}</span>
+              <span>{selectedProductCopy.material}</span>
+              <span>{selectedProductCopy.size}</span>
+              <span>{t.textLimit}</span>
             </div>
 
             <div className="price-row">
-              <span className="price">{formatPrice(selectedProduct.price)}</span>
-              <span className="tax-note">inkl. MwSt., zzgl. Versand</span>
+              <span className="price">{formatPrice(selectedProduct.price, language)}</span>
+              <span className="tax-note">{t.taxNote}</span>
             </div>
 
             <form className="configurator" onSubmit={addToCart}>
               <label className="field-group" htmlFor="custom-text">
-                <span>Name oder kurzer Text</span>
+                <span>{t.customTextLabel}</span>
                 <input
                   id="custom-text"
                   maxLength={TEXT_LIMIT}
                   value={customText}
                   onChange={(event) => setCustomText(event.target.value.slice(0, TEXT_LIMIT))}
-                  placeholder="z. B. Emilia"
+                  placeholder={t.customTextPlaceholder}
                 />
               </label>
 
               <div className="field-group">
-                <span>{selectedProduct.finishLabel}</span>
-                <div className="color-grid" role="radiogroup" aria-label={selectedProduct.finishLabel}>
+                <span>{selectedProductCopy.finishLabel}</span>
+                <div
+                  className="color-grid"
+                  role="radiogroup"
+                  aria-label={selectedProductCopy.finishLabel}
+                >
                   {selectedProduct.finishes.map((finish) => (
                     <button
                       className={`color-option ${
@@ -367,15 +1338,15 @@ export default function Home() {
                           } as CSSProperties
                         }
                       />
-                      <span>{finish.label}</span>
+                      <span>{finish.label[language]}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
               <div className="field-group">
-                <span>Logo-Motiv</span>
-                <div className="logo-grid" role="radiogroup" aria-label="Logo-Motiv">
+                <span>{t.logoLabel}</span>
+                <div className="logo-grid" role="radiogroup" aria-label={t.logoLabel}>
                   {logoOptions.map((logo) => (
                     <button
                       className={`logo-option ${
@@ -389,13 +1360,13 @@ export default function Home() {
                       <span className="logo-symbol" aria-hidden="true">
                         {logo.mark}
                       </span>
-                      <span>{logo.label}</span>
+                      <span>{logo.label[language]}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
-              <div className="preview-row" aria-label="Gravurvorschau">
+              <div className="preview-row" aria-label={t.previewLabel}>
                 <div className={`engraving-card ${selectedProduct.previewClass}`}>
                   <span className="preview-logo">{selectedLogo.mark}</span>
                   <span className="preview-name" style={{ fontSize: previewNameSize }}>
@@ -403,17 +1374,19 @@ export default function Home() {
                   </span>
                 </div>
                 <div>
-                  <strong>{selectedProduct.personalization}</strong>
-                  <span>{selectedFinish.label} / {selectedLogo.label}</span>
+                  <strong>{selectedProductCopy.personalization}</strong>
+                  <span>
+                    {selectedFinish.label[language]} / {selectedLogo.label[language]}
+                  </span>
                 </div>
               </div>
 
               <div className="quantity-row">
-                <span>Menge</span>
-                <div className="stepper" aria-label="Menge">
+                <span>{t.quantity}</span>
+                <div className="stepper" aria-label={t.quantity}>
                   <button
                     type="button"
-                    aria-label="Menge verringern"
+                    aria-label={t.decreaseQuantity}
                     onClick={() => setQuantity((current) => Math.max(1, current - 1))}
                   >
                     -
@@ -421,7 +1394,7 @@ export default function Home() {
                   <output aria-live="polite">{quantity}</output>
                   <button
                     type="button"
-                    aria-label="Menge erhöhen"
+                    aria-label={t.increaseQuantity}
                     onClick={() => setQuantity((current) => Math.min(12, current + 1))}
                   >
                     +
@@ -430,186 +1403,134 @@ export default function Home() {
               </div>
 
               <button className="primary-button" type="submit">
-                In den Warenkorb
+                {t.addToCart}
               </button>
             </form>
           </div>
 
-          <aside className="cart-summary" id="warenkorb" aria-label="Warenkorb">
+          <aside className="cart-summary" id="warenkorb" aria-label={t.cartTitle}>
             <div>
-              <p className="section-kicker">Warenkorb</p>
-              <h2>Aktuelle Auswahl</h2>
+              <p className="section-kicker">{t.cartTitle}</p>
+              <h2>{t.cartHeading}</h2>
             </div>
             {cartItems.length === 0 ? (
-              <p className="empty-cart">Noch kein personalisiertes Produkt im Warenkorb.</p>
+              <p className="empty-cart">{t.emptyCart}</p>
             ) : (
               <div className="cart-list" aria-live="polite">
-                {cartItems.map((item) => (
-                  <article className="cart-line" key={item.id}>
-                    <div>
-                      <strong>{item.productName}</strong>
+                {cartItems.map((item) => {
+                  const product = getProduct(item.productId);
+                  const finish = getFinish(item.productId, item.finishId);
+                  const logo = getLogo(item.logoId);
+
+                  return (
+                    <article className="cart-line" key={item.id}>
+                      <div>
+                        <strong>{product.translations[language].shortName}</strong>
+                        <span>
+                          {item.customText} / {logo.label[language]}
+                        </span>
+                        <span>{finish.label[language]}</span>
+                      </div>
                       <span>
-                        {item.customText} / {item.logo}
+                        {item.quantity} x {formatPrice(item.price, language)}
                       </span>
-                      <span>{item.finish}</span>
-                    </div>
-                    <span>
-                      {item.quantity} x {formatPrice(item.price)}
-                    </span>
-                  </article>
-                ))}
+                    </article>
+                  );
+                })}
               </div>
             )}
             <div className="cart-total">
-              <span>Zwischensumme</span>
-              <strong>{formatPrice(cartTotal)}</strong>
+              <span>{t.subtotal}</span>
+              <strong>{formatPrice(cartTotal, language)}</strong>
             </div>
             <button className="secondary-button" type="button" disabled>
-              Checkout folgt
+              {t.checkoutSoon}
             </button>
           </aside>
         </section>
 
         <section className="service-strip" aria-label="Service">
-          <div>
-            <strong>Kurze Personalisierung</strong>
-            <span>Bis 12 Zeichen für saubere Gravurflächen.</span>
-          </div>
-          <div>
-            <strong>Ausgewählte Motive</strong>
-            <span>Logo-Auswahl pro Geschenk kombinierbar.</span>
-          </div>
-          <div>
-            <strong>Mehrere Produktlinien</strong>
-            <span>Weihnachten, Lesen, Schlüssel und Holzschreibwaren.</span>
-          </div>
+          {t.service.map(([title, body]) => (
+            <div key={title}>
+              <strong>{title}</strong>
+              <span>{body}</span>
+            </div>
+          ))}
         </section>
 
         <section className="products-section" id="sortiment" aria-labelledby="sortiment-title">
           <div className="section-heading">
-            <p className="section-kicker">Sortiment</p>
-            <h2 id="sortiment-title">Personalisierbare Produkte</h2>
+            <p className="section-kicker">{t.assortmentKicker}</p>
+            <h2 id="sortiment-title">{t.assortmentTitle}</h2>
           </div>
           <div className="product-card-grid">
-            {products.map((product) => (
-              <article
-                className={`product-card ${selectedProduct.id === product.id ? "selected" : ""}`}
-                key={product.id}
-              >
-                <img src={product.photos[0].src} alt={product.photos[0].alt} />
-                <div>
-                  <p className="section-kicker">{product.category}</p>
-                  <h3>{product.name}</h3>
-                  <p>{product.personalization}</p>
-                </div>
-                <div className="card-bottom">
-                  <strong>{formatPrice(product.price)}</strong>
-                  <button type="button" onClick={() => selectProduct(product.id)}>
-                    Auswählen
-                  </button>
-                </div>
-              </article>
-            ))}
+            {products.map((product) => {
+              const productCopy = product.translations[language];
+
+              return (
+                <article
+                  className={`product-card ${selectedProduct.id === product.id ? "selected" : ""}`}
+                  key={product.id}
+                >
+                  <img src={product.photos[0].src} alt={product.photos[0].alt[language]} />
+                  <div>
+                    <p className="section-kicker">{productCopy.category}</p>
+                    <h3>{productCopy.name}</h3>
+                    <p>{productCopy.personalization}</p>
+                  </div>
+                  <div className="card-bottom">
+                    <strong>{formatPrice(product.price, language)}</strong>
+                    <button type="button" onClick={() => selectProduct(product.id)}>
+                      {t.selectProduct}
+                    </button>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </section>
 
         <section className="details-section" id="details" aria-labelledby="details-title">
           <div className="section-heading">
-            <p className="section-kicker">Produktdetails</p>
-            <h2 id="details-title">Vorbereitet für den Verkauf</h2>
+            <p className="section-kicker">{t.detailsKicker}</p>
+            <h2 id="details-title">{t.detailsTitle}</h2>
           </div>
           <div className="detail-columns">
-            <article>
-              <h3>Personalisierung</h3>
-              <p>
-                Jedes Produkt nutzt denselben Bestellfluss: Text eingeben, Motiv wählen,
-                Ausführung auswählen und in den Warenkorb legen.
-              </p>
-            </article>
-            <article>
-              <h3>Produktdaten</h3>
-              <p>
-                Preise, Maße und Materialien sind als Produktdaten angelegt und können
-                später direkt pro Artikel finalisiert werden.
-              </p>
-            </article>
-            <article>
-              <h3>Bestellung</h3>
-              <p>
-                Der Checkout bleibt vorbereitet, bis Zahlungsarten, Versandkosten und
-                rechtliche Pflichtangaben final feststehen.
-              </p>
-            </article>
+            {t.detailCards.map(([title, body]) => (
+              <article key={title}>
+                <h3>{title}</h3>
+                <p>{body}</p>
+              </article>
+            ))}
           </div>
         </section>
 
         <section className="terms-section" id="agb" aria-labelledby="agb-title">
           <div className="section-heading">
-            <p className="section-kicker">AGB</p>
-            <h2 id="agb-title">Allgemeine Geschäftsbedingungen</h2>
+            <p className="section-kicker">{t.termsKicker}</p>
+            <h2 id="agb-title">{t.termsTitle}</h2>
           </div>
           <div className="terms-grid">
-            <article>
-              <h3>1. Geltungsbereich</h3>
-              <p>
-                Diese Bedingungen gelten für Bestellungen im Online-Shop Feine Gravur.
-                Abweichende Regelungen gelten nur, wenn sie schriftlich bestätigt wurden.
-              </p>
-            </article>
-            <article>
-              <h3>2. Bestellung</h3>
-              <p>
-                Kundinnen und Kunden wählen Produkt, Menge und Personalisierung aus.
-                Vor dem Absenden können Eingaben geprüft und korrigiert werden.
-              </p>
-            </article>
-            <article>
-              <h3>3. Personalisierte Waren</h3>
-              <p>
-                Gravierte Artikel werden nach Kundenvorgabe gefertigt. Schreibfehler in
-                übermittelten Texten werden nur korrigiert, wenn sie vor Produktionsbeginn
-                gemeldet werden.
-              </p>
-            </article>
-            <article>
-              <h3>4. Preise und Zahlung</h3>
-              <p>
-                Alle Preise verstehen sich inklusive gesetzlicher Umsatzsteuer zuzüglich
-                Versandkosten. Die verfügbaren Zahlungsarten werden im Checkout angezeigt.
-              </p>
-            </article>
-            <article>
-              <h3>5. Lieferung</h3>
-              <p>
-                Die Lieferzeit richtet sich nach Produkt und Auftragslage. Verzögerungen
-                durch unklare Personalisierungsangaben können die Fertigung verlängern.
-              </p>
-            </article>
-            <article>
-              <h3>6. Gewährleistung</h3>
-              <p>
-                Es gelten die gesetzlichen Gewährleistungsrechte. Bei Transportschäden
-                oder Produktionsfehlern bitten wir um eine zeitnahe Nachricht mit Foto.
-              </p>
-            </article>
+            {t.terms.map(([title, body]) => (
+              <article key={title}>
+                <h3>{title}</h3>
+                <p>{body}</p>
+              </article>
+            ))}
           </div>
-          <p className="terms-note">
-            Mustertext für den Prototyp. Firmenangaben, Widerrufsbelehrung,
-            Datenschutz, Versand und Zahlungsarten sollten vor Veröffentlichung rechtlich
-            geprüft und ergänzt werden.
-          </p>
+          <p className="terms-note">{t.termsNote}</p>
         </section>
       </main>
 
       <footer className="shop-footer" id="kontakt">
         <div>
           <strong>Feine Gravur</strong>
-          <span>Demo-Shop für personalisierte Gravurgeschenke</span>
+          <span>{t.footerSubtitle}</span>
         </div>
         <div className="footer-links">
-          <a href="#produkt">Konfigurator</a>
-          <a href="#sortiment">Sortiment</a>
-          <a href="#agb">AGB</a>
+          <a href="#produkt">{t.nav.configurator}</a>
+          <a href="#sortiment">{t.nav.assortment}</a>
+          <a href="#agb">{t.nav.terms}</a>
           <a href="mailto:hallo@example.de">hallo@example.de</a>
         </div>
       </footer>

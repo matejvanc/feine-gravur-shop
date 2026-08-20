@@ -25,7 +25,7 @@ async function render() {
   );
 }
 
-test("server-renders the German personalized shop", async () => {
+test("server-renders the multilingual personalized shop", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
@@ -39,6 +39,11 @@ test("server-renders the German personalized shop", async () => {
   assert.match(html, /Holz-Flaschenöffner/);
   assert.match(html, /Holz-Kugelschreiber/);
   assert.match(html, /Logo-Motiv/);
+  assert.match(html, />DE</);
+  assert.match(html, />EN</);
+  assert.match(html, />CS</);
+  assert.match(html, />FR</);
+  assert.match(html, />IT</);
   assert.match(html, /Text bis[\s\S]*12[\s\S]*Zeichen/);
   assert.match(html, /Allgemeine Geschäftsbedingungen/);
   assert.match(html, /In den Warenkorb/);
@@ -54,6 +59,14 @@ test("starter preview files and dependencies are removed", async () => {
   ]);
 
   assert.match(page, /const TEXT_LIMIT = 12;/);
+  assert.match(page, /type LanguageCode = "de" \| "en" \| "cs" \| "fr" \| "it";/);
+  assert.match(page, /useState<LanguageCode>\("de"\)/);
+  assert.match(page, /language-switcher/);
+  assert.match(page, /document\.documentElement\.lang = language/);
+  assert.match(page, /Gravírované vánoční ozdoby/);
+  assert.match(page, /Engraved Christmas Baubles/);
+  assert.match(page, /Boules de Noël gravées/);
+  assert.match(page, /Palline di Natale incise/);
   assert.match(page, /maxLength={TEXT_LIMIT}/);
   assert.doesNotMatch(page, /_sites-preview|SkeletonPreview|codex-preview/);
   assert.doesNotMatch(layout, /Starter Project|codex-preview/);

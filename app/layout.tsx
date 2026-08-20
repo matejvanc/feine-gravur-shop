@@ -23,7 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: new URL(origin),
     title: "Feine Gravur | Personalisierte Geschenke",
     description:
-      "Deutscher E-Shop-Prototyp für Weihnachtskugeln, Holz-Lesezeichen, Anhänger, Flaschenöffner und Kugelschreiber mit Gravur.",
+      "Mehrsprachiger E-Shop-Prototyp für Weihnachtskugeln, Holz-Lesezeichen, Anhänger, Flaschenöffner und Kugelschreiber mit Gravur.",
     icons: {
       icon: "/favicon.svg",
       shortcut: "/favicon.svg",
@@ -31,7 +31,7 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: "Feine Gravur | Personalisierte Geschenke",
       description:
-        "Konfigurierbare Gravurgeschenke mit eigener Namensgravur und Logo-Motiv.",
+        "Konfigurierbare Gravurgeschenke mit eigener Namensgravur, Logo-Motiv und Sprachumschaltung.",
       images: [
         {
           url: `${origin}/og.png`,
@@ -45,7 +45,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title: "Feine Gravur | Personalisierte Geschenke",
       description:
-        "Konfigurierbare Gravurgeschenke mit eigener Namensgravur und Logo-Motiv.",
+        "Konfigurierbare Gravurgeschenke mit eigener Namensgravur, Logo-Motiv und Sprachumschaltung.",
       images: [`${origin}/og.png`],
     },
   };
@@ -57,7 +57,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="de">
+    <html lang="de" suppressHydrationWarning>
       <body>{children}</body>
     </html>
   );
