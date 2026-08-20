@@ -36,7 +36,7 @@ const ui = {
     brandSubtitle: "Personalisierte Geschenke",
     nav: {
       configurator: "Konfigurator",
-      assortment: "Sortiment",
+      assortment: "Shop",
       details: "Details",
       terms: "AGB",
     },
@@ -123,9 +123,9 @@ const ui = {
     brandSubtitle: "Personalised gifts",
     nav: {
       configurator: "Configurator",
-      assortment: "Products",
+      assortment: "Shop",
       details: "Details",
-      terms: "Terms",
+      terms: "AGB",
     },
     languageLabel: "Change language",
     cartTitle: "Cart",
@@ -134,7 +134,7 @@ const ui = {
     taxNote: "incl. VAT, plus shipping",
     customTextLabel: "Name or short text",
     customTextPlaceholder: "e.g. Emilia",
-    logoLabel: "Logo motif",
+    logoLabel: "Logo motiv",
     previewLabel: "Engraving preview",
     previewFallback: "Name",
     quantity: "Quantity",
@@ -150,7 +150,7 @@ const ui = {
     selectProduct: "Select",
     service: [
       ["Short personalisation", "Up to 12 characters for clean engraving areas."],
-      ["Selected motifs", "Combine each gift with a logo motif from the range."],
+      ["Selected motivs", "Combine each gift with a logo motiv from the range."],
       ["Several product lines", "Christmas, reading, keychains and wooden stationery."],
     ],
     assortmentKicker: "Products",
@@ -160,7 +160,7 @@ const ui = {
     detailCards: [
       [
         "Personalisation",
-        "Every product uses the same order flow: enter text, choose a motif, select a finish and add it to the cart.",
+        "Every product uses the same order flow: enter text, choose a motiv, select a finish and add it to the cart.",
       ],
       [
         "Product data",
@@ -210,9 +210,9 @@ const ui = {
     brandSubtitle: "Personalizované dárky",
     nav: {
       configurator: "Konfigurátor",
-      assortment: "Produkty",
+      assortment: "Shop",
       details: "Detaily",
-      terms: "Podmínky",
+      terms: "AGB",
     },
     languageLabel: "Změnit jazyk",
     cartTitle: "Košík",
@@ -297,9 +297,9 @@ const ui = {
     brandSubtitle: "Cadeaux personnalisés",
     nav: {
       configurator: "Configurateur",
-      assortment: "Produits",
+      assortment: "Shop",
       details: "Détails",
-      terms: "CGV",
+      terms: "AGB",
     },
     languageLabel: "Changer de langue",
     cartTitle: "Panier",
@@ -384,9 +384,9 @@ const ui = {
     brandSubtitle: "Regali personalizzati",
     nav: {
       configurator: "Configuratore",
-      assortment: "Prodotti",
+      assortment: "Shop",
       details: "Dettagli",
-      terms: "Condizioni",
+      terms: "AGB",
     },
     languageLabel: "Cambia lingua",
     cartTitle: "Carrello",
@@ -479,18 +479,18 @@ const homeCopy = {
     galleryLabel: "Einblicke ins Sortiment",
   },
   en: {
-    navLabel: "Home",
+    navLabel: "Start",
     eyebrow: "Engraved gifts",
     title: "Feine Gravur",
     lead:
       "Personalised glass and wooden keepsakes that are easy to order and still feel truly personal.",
     primaryCta: "Start configuring",
     secondaryCta: "View products",
-    highlights: ["Custom text", "Choose a motif", "Packed with care"],
+    highlights: ["Custom text", "Choose a motiv", "Packed with care"],
     galleryLabel: "Product glimpses",
   },
   cs: {
-    navLabel: "Úvod",
+    navLabel: "Start",
     eyebrow: "Dárky s gravírováním",
     title: "Feine Gravur",
     lead:
@@ -501,7 +501,7 @@ const homeCopy = {
     galleryLabel: "Ukázky sortimentu",
   },
   fr: {
-    navLabel: "Accueil",
+    navLabel: "Start",
     eyebrow: "Cadeaux gravés",
     title: "Feine Gravur",
     lead:
@@ -512,7 +512,7 @@ const homeCopy = {
     galleryLabel: "Aperçu des produits",
   },
   it: {
-    navLabel: "Home",
+    navLabel: "Start",
     eyebrow: "Regali incisi",
     title: "Feine Gravur",
     lead:
@@ -654,6 +654,10 @@ const introPhotos = [
     productId: "flaschenoeffner",
     src: "/products/wood-opener-pen-set.jpeg",
   },
+  {
+    productId: "kugelschreiber",
+    src: "/products/wood-pen.jpeg",
+  },
 ];
 
 const logoOptions = [
@@ -717,8 +721,8 @@ const products = [
         material: "Glass or wood",
         size: "approx. 8 cm",
         lead:
-          "Personalised Christmas baubles with a name, short text and chosen motif. Perfect as a small gift or for your own tree.",
-        personalization: "Name, year, heart, stars or custom motif",
+          "Personalised Christmas baubles with a name, short text and chosen motiv. Perfect as a small gift or for your own tree.",
+        personalization: "Name, year, heart, stars or custom motiv",
         finishLabel: "Colour / shape",
       },
       cs: {
@@ -874,8 +878,8 @@ const products = [
         material: "Birch plywood",
         size: "approx. 15 x 4 cm",
         lead:
-          "Light wooden bookmark with engraving and coloured tassel. Name and motif are placed to suit the shape.",
-        personalization: "Name, short quote or reading motif",
+          "Light wooden bookmark with engraving and coloured tassel. Name and motiv are placed to suit the shape.",
+        personalization: "Name, short quote or reading motiv",
         finishLabel: "Tassel",
       },
       cs: {
@@ -989,16 +993,16 @@ const products = [
       },
       en: {
         category: "Keys",
-        badge: "Motif series",
+        badge: "Motiv series",
         name: "Wooden Keychain",
         shortName: "Keychain",
         delivery: "3-6 working days",
         material: "Round wooden disc",
         size: "approx. 5 cm",
         lead:
-          "Round wooden keychain with fine motif engraving. Add a short name on the back or keep it as a clean motif piece.",
+          "Round wooden keychain with fine motiv engraving. Add a short name on the back or keep it as a clean motiv piece.",
         personalization: "Name, initial or symbol",
-        finishLabel: "Motif style",
+        finishLabel: "Motiv style",
       },
       cs: {
         category: "Klíče",
@@ -1066,7 +1070,7 @@ const products = [
         src: "/products/wood-pendants-zodiac.jpeg",
         alt: {
           de: "Mehrere runde Holz-Anhänger mit gravierten Motiven",
-          en: "Several round wooden keychains with engraved motifs",
+          en: "Several round wooden keychains with engraved motivs",
           cs: "Více kulatých dřevěných přívěšků s gravírovanými motivy",
           fr: "Plusieurs porte-clés ronds en bois avec motifs gravés",
           it: "Diversi portachiavi rotondi in legno con motivi incisi",
@@ -1319,7 +1323,7 @@ const products = [
   },
 ];
 
-type PageView = "home" | "product" | "cart";
+type PageView = "home" | "product" | "cart" | "terms";
 
 type RouteState = {
   view: PageView;
@@ -1339,6 +1343,10 @@ function parseRoute(pathname: string): RouteState {
 
   if (firstSegment === "kosik") {
     return { view: "cart" };
+  }
+
+  if (firstSegment === "agb") {
+    return { view: "terms" };
   }
 
   return { view: "home" };
@@ -1439,8 +1447,17 @@ export default function Home({ initialPath = "/" }: HomeProps = {}) {
         ? `${selectedProductCopy.name} | Feine Gravur`
         : currentView === "cart"
           ? `${t.cartTitle} | Feine Gravur`
-          : t.pageTitle;
-  }, [currentView, language, selectedProductCopy.name, t.cartTitle, t.pageTitle]);
+          : currentView === "terms"
+            ? `${t.termsTitle} | Feine Gravur`
+            : t.pageTitle;
+  }, [
+    currentView,
+    language,
+    selectedProductCopy.name,
+    t.cartTitle,
+    t.pageTitle,
+    t.termsTitle,
+  ]);
 
   useEffect(() => {
     try {
@@ -1528,6 +1545,14 @@ export default function Home({ initialPath = "/" }: HomeProps = {}) {
     } else {
       scrollToPageTop();
     }
+  }
+
+  function navigateTerms() {
+    setCurrentView("terms");
+    setShowCartChoice(false);
+    setCheckoutMessage(false);
+    window.history.pushState(null, "", "/agb");
+    scrollToPageTop();
   }
 
   function selectProduct(productId: string) {
@@ -1653,6 +1678,7 @@ export default function Home({ initialPath = "/" }: HomeProps = {}) {
         </a>
         <nav className="main-nav" aria-label={t.nav.assortment}>
           <a
+            className={currentView === "home" ? "active" : ""}
             href="/"
             onClick={(event) => {
               event.preventDefault();
@@ -1662,15 +1688,16 @@ export default function Home({ initialPath = "/" }: HomeProps = {}) {
             {home.navLabel}
           </a>
           <a
-            href="/#sortiment"
+            href="/#produkte"
             onClick={(event) => {
               event.preventDefault();
-              navigateHome("sortiment");
+              navigateHome("produkte");
             }}
           >
             {t.nav.assortment}
           </a>
           <a
+            className={currentView === "cart" ? "active" : ""}
             href="/kosik"
             onClick={(event) => {
               event.preventDefault();
@@ -1680,10 +1707,11 @@ export default function Home({ initialPath = "/" }: HomeProps = {}) {
             {t.cartTitle}
           </a>
           <a
-            href="/kosik#agb"
+            className={currentView === "terms" ? "active" : ""}
+            href="/agb"
             onClick={(event) => {
               event.preventDefault();
-              navigateCart("agb");
+              navigateTerms();
             }}
           >
             {t.nav.terms}
@@ -1747,10 +1775,10 @@ export default function Home({ initialPath = "/" }: HomeProps = {}) {
                   </a>
                   <a
                     className="hero-secondary"
-                    href="/#sortiment"
+                    href="/#produkte"
                     onClick={(event) => {
                       event.preventDefault();
-                      navigateHome("sortiment");
+                      navigateHome("produkte");
                     }}
                   >
                     {home.secondaryCta}
@@ -1764,7 +1792,7 @@ export default function Home({ initialPath = "/" }: HomeProps = {}) {
               </div>
             </section>
 
-            <section className="intro-gallery" aria-label={home.galleryLabel}>
+            <section className="intro-gallery" id="produkte" aria-label={home.galleryLabel}>
               {introPhotos.map((photo) => {
                 const product = getProduct(photo.productId);
                 const productCopy = product.translations[language];
@@ -1777,20 +1805,10 @@ export default function Home({ initialPath = "/" }: HomeProps = {}) {
                     onClick={() => selectProduct(product.id)}
                   >
                     <img src={photo.src} alt={productCopy.name} />
-                    <span>{productCopy.shortName}</span>
+                    <span>{productCopy.name}</span>
                   </button>
                 );
               })}
-            </section>
-
-            <section className="products-section" id="sortiment" aria-labelledby="sortiment-title">
-              <div className="section-heading">
-                <p className="section-kicker">{t.assortmentKicker}</p>
-                <h2 id="sortiment-title">{t.assortmentTitle}</h2>
-              </div>
-              <div className="product-card-grid">
-                {products.map((product) => renderProductCard(product, selectedProduct.id === product.id))}
-              </div>
             </section>
           </>
         )}
@@ -2012,7 +2030,7 @@ export default function Home({ initialPath = "/" }: HomeProps = {}) {
                   {cartItems.length === 0 ? (
                     <div className="empty-state">
                       <p>{t.emptyCart}</p>
-                      <button type="button" onClick={() => navigateHome("sortiment")}>
+                      <button type="button" onClick={() => navigateHome("produkte")}>
                         {flow.cartEmptyAction}
                       </button>
                     </div>
@@ -2082,11 +2100,33 @@ export default function Home({ initialPath = "/" }: HomeProps = {}) {
                 {products.map((product) => renderProductCard(product, selectedProduct.id === product.id))}
               </div>
             </section>
+          </>
+        )}
 
-            <section className="terms-section" id="agb" aria-labelledby="agb-title">
-              <div className="section-heading">
-                <p className="section-kicker">{t.termsKicker}</p>
-                <h2 id="agb-title">{t.termsTitle}</h2>
+        {currentView === "terms" && (
+          <>
+            <div className="page-toolbar">
+              <a
+                href="/"
+                onClick={(event) => {
+                  event.preventDefault();
+                  navigateHome();
+                }}
+              >
+                {flow.backHome}
+              </a>
+              <button type="button" onClick={() => navigateCart()}>
+                {flow.goToCart}
+              </button>
+            </div>
+
+            <section className="terms-section terms-page" id="agb" aria-labelledby="agb-title">
+              <div className="section-heading cart-page-heading">
+                <div>
+                  <p className="section-kicker">{t.termsKicker}</p>
+                  <h1 id="agb-title">{t.termsTitle}</h1>
+                </div>
+                <p>{t.termsNote}</p>
               </div>
               <div className="terms-grid">
                 {t.terms.map(([title, body]) => (
@@ -2096,7 +2136,6 @@ export default function Home({ initialPath = "/" }: HomeProps = {}) {
                   </article>
                 ))}
               </div>
-              <p className="terms-note">{t.termsNote}</p>
             </section>
           </>
         )}
@@ -2140,10 +2179,10 @@ export default function Home({ initialPath = "/" }: HomeProps = {}) {
             {home.navLabel}
           </a>
           <a
-            href="/#sortiment"
+            href="/#produkte"
             onClick={(event) => {
               event.preventDefault();
-              navigateHome("sortiment");
+              navigateHome("produkte");
             }}
           >
             {t.nav.assortment}
@@ -2156,6 +2195,15 @@ export default function Home({ initialPath = "/" }: HomeProps = {}) {
             }}
           >
             {t.cartTitle}
+          </a>
+          <a
+            href="/agb"
+            onClick={(event) => {
+              event.preventDefault();
+              navigateTerms();
+            }}
+          >
+            {t.nav.terms}
           </a>
           <a href="mailto:hallo@example.de">hallo@example.de</a>
         </div>

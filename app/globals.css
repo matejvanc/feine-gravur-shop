@@ -69,9 +69,9 @@ button:disabled {
   align-items: center;
   background: rgba(251, 250, 247, 0.95);
   border-bottom: 1px solid rgba(31, 77, 58, 0.12);
-  display: flex;
+  display: grid;
   gap: 1.5rem;
-  justify-content: space-between;
+  grid-template-columns: minmax(220px, 1fr) minmax(360px, auto) minmax(330px, 1fr);
   min-height: 76px;
   padding: 0.85rem clamp(1rem, 4vw, 3rem);
   position: sticky;
@@ -83,6 +83,7 @@ button:disabled {
   align-items: center;
   display: inline-flex;
   gap: 0.75rem;
+  justify-self: start;
   min-width: 184px;
 }
 
@@ -116,9 +117,15 @@ button:disabled {
 
 .main-nav {
   align-items: center;
-  display: flex;
-  gap: clamp(0.85rem, 2vw, 1.6rem);
-  justify-content: center;
+  background: #fffdf8;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 0.2rem;
+  grid-template-columns: repeat(4, minmax(82px, 1fr));
+  justify-self: center;
+  min-width: min(100%, 430px);
+  padding: 0.22rem;
 }
 
 .main-nav a,
@@ -128,9 +135,26 @@ button:disabled {
   font-weight: 650;
 }
 
+.main-nav a {
+  align-items: center;
+  border-radius: 6px;
+  display: inline-flex;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0.35rem 0.58rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
 .main-nav a:hover,
+.main-nav a.active,
 .header-cart:hover {
   color: var(--forest);
+}
+
+.main-nav a:hover,
+.main-nav a.active {
+  background: #edf4ef;
 }
 
 .header-actions {
@@ -138,6 +162,7 @@ button:disabled {
   display: flex;
   gap: 0.65rem;
   justify-content: flex-end;
+  justify-self: end;
   min-width: 330px;
 }
 
@@ -184,7 +209,7 @@ main {
 
 #start,
 #produkt,
-#sortiment,
+#produkte,
 #related-products,
 #warenkorb,
 #details,
@@ -283,7 +308,7 @@ main {
 .intro-gallery {
   display: grid;
   gap: 1rem;
-  grid-template-columns: 1.25fr repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   margin: 0 auto clamp(1rem, 3vw, 2rem);
   max-width: 1440px;
 }
@@ -293,7 +318,7 @@ main {
   border: 0;
   border-radius: 8px;
   color: white;
-  min-height: 230px;
+  min-height: 250px;
   overflow: hidden;
   padding: 0;
   position: relative;
@@ -310,7 +335,7 @@ main {
 .intro-photo img {
   display: block;
   height: 100%;
-  min-height: 230px;
+  min-height: 250px;
   object-fit: cover;
   object-position: center;
   transition: transform 180ms ease;
@@ -326,6 +351,7 @@ main {
   color: #fffaf2;
   font-weight: 850;
   left: 0.9rem;
+  line-height: 1.16;
   position: absolute;
   right: 0.9rem;
   z-index: 1;
@@ -1099,6 +1125,18 @@ a:focus-visible {
   padding: 0.9rem 1rem;
 }
 
+.terms-page {
+  padding-top: clamp(0.4rem, 2vw, 1rem);
+}
+
+.terms-page .cart-page-heading > p {
+  background: #fff7ec;
+  border-left: 4px solid var(--brass);
+  border-radius: 0 8px 8px 0;
+  color: #594b38;
+  padding: 0.9rem 1rem;
+}
+
 .shop-footer {
   align-items: center;
   border-top: 1px solid var(--line);
@@ -1138,20 +1176,24 @@ a:focus-visible {
   .product-card-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+
+  .intro-gallery {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 900px) {
   .shop-header {
     align-items: flex-start;
+    display: flex;
     flex-direction: column;
     gap: 0.9rem;
     position: static;
   }
 
   .main-nav {
-    justify-content: flex-start;
+    min-width: 100%;
     overflow-x: auto;
-    padding-bottom: 0.2rem;
     width: 100%;
   }
 
@@ -1238,6 +1280,15 @@ a:focus-visible {
 
   .intro-gallery {
     grid-template-columns: 1fr;
+  }
+
+  .main-nav {
+    grid-template-columns: repeat(4, minmax(66px, 1fr));
+  }
+
+  .main-nav a {
+    font-size: 0.82rem;
+    padding-inline: 0.4rem;
   }
 
   .hero-primary,

@@ -40,9 +40,11 @@ test("server-renders the multilingual personalized shop", async () => {
   assert.match(html, /Holz-Anhänger/);
   assert.match(html, /Holz-Flaschenöffner/);
   assert.match(html, /Holz-Kugelschreiber/);
-  assert.match(html, /Produkt ansehen/);
+  assert.doesNotMatch(html, /Produkt ansehen/);
   assert.match(html, /\/produkt\/weihnachtskugeln/);
+  assert.match(html, /#produkte/);
   assert.match(html, /\/kosik/);
+  assert.match(html, /\/agb/);
   assert.match(html, />DE</);
   assert.match(html, />EN</);
   assert.match(html, />CS</);
@@ -69,7 +71,14 @@ test("fallback routes serve product and cart paths for client routing", async ()
   assert.match(cartHtml, /Warenkorb/);
   assert.match(cartHtml, /Deine Auswahl/);
   assert.match(cartHtml, /Checkout/);
-  assert.match(cartHtml, /Allgemeine Geschäftsbedingungen/);
+  assert.doesNotMatch(cartHtml, /Allgemeine Geschäftsbedingungen/);
+
+  const termsResponse = await render("/agb");
+  assert.equal(termsResponse.status, 200);
+  const termsHtml = await termsResponse.text();
+  assert.match(termsHtml, /Allgemeine Geschäftsbedingungen/);
+  assert.match(termsHtml, /Geltungsbereich/);
+  assert.match(termsHtml, /Zur Startseite/);
 });
 
 test("starter preview files and dependencies are removed", async () => {
@@ -89,10 +98,15 @@ test("starter preview files and dependencies are removed", async () => {
   assert.match(page, /const flowCopy/);
   assert.match(page, /initialPath/);
   assert.match(page, /intro-gallery/);
+  assert.match(page, /id="produkte"/);
   assert.match(page, /scrollIntoView/);
   assert.match(page, /className={`product-card/);
   assert.match(page, /productHref/);
   assert.match(page, /parseRoute/);
+  assert.match(page, /type PageView = "home" \| "product" \| "cart" \| "terms";/);
+  assert.match(page, /navigateTerms/);
+  assert.match(page, /href="\/agb"/);
+  assert.match(page, /productId: "kugelschreiber"/);
   assert.match(page, /feine-gravur-cart/);
   assert.match(page, /showCartChoice/);
   assert.match(page, /cart-choice/);
@@ -102,7 +116,9 @@ test("starter preview files and dependencies are removed", async () => {
   assert.match(page, /Engraved Christmas Baubles/);
   assert.match(page, /Boules de Noël gravées/);
   assert.match(page, /Palline di Natale incise/);
+  assert.match(page, /Logo motiv/);
   assert.match(page, /maxLength={TEXT_LIMIT}/);
+  assert.doesNotMatch(page, /kosik#agb|sortiment-title|id="sortiment"|Logo motif|chosen motif|custom motif|reading motif|Motif series|Motif style|engraved motifs/);
   assert.match(routeFallback, /CatchAllPage/);
   assert.match(routeFallback, /initialPath/);
   assert.match(layout, /Feine Gravur/);
