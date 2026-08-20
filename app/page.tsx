@@ -114,7 +114,6 @@ const ui = {
     ],
     termsNote:
       "Mustertext für den Prototyp. Firmenangaben, Widerrufsbelehrung, Datenschutz, Versand und Zahlungsarten sollten vor Veröffentlichung rechtlich geprüft und ergänzt werden.",
-    footerSubtitle: "Demo-Shop für personalisierte Gravurgeschenke",
   },
   en: {
     pageTitle: "Feine Gravur | Personalised Gifts",
@@ -134,7 +133,7 @@ const ui = {
     taxNote: "incl. VAT, plus shipping",
     customTextLabel: "Name or short text",
     customTextPlaceholder: "e.g. Emilia",
-    logoLabel: "Logo motiv",
+    logoLabel: "Logo motif",
     previewLabel: "Engraving preview",
     previewFallback: "Name",
     quantity: "Quantity",
@@ -150,7 +149,7 @@ const ui = {
     selectProduct: "Select",
     service: [
       ["Short personalisation", "Up to 12 characters for clean engraving areas."],
-      ["Selected motivs", "Combine each gift with a logo motiv from the range."],
+      ["Selected motifs", "Combine each gift with a logo motif from the range."],
       ["Several product lines", "Christmas, reading, keychains and wooden stationery."],
     ],
     assortmentKicker: "Products",
@@ -160,7 +159,7 @@ const ui = {
     detailCards: [
       [
         "Personalisation",
-        "Every product uses the same order flow: enter text, choose a motiv, select a finish and add it to the cart.",
+        "Every product uses the same order flow: enter text, choose a motif, select a finish and add it to the cart.",
       ],
       [
         "Product data",
@@ -201,7 +200,6 @@ const ui = {
     ],
     termsNote:
       "Sample text for the prototype. Business details, withdrawal policy, privacy, shipping and payment methods should be legally checked and completed before publication.",
-    footerSubtitle: "Demo shop for personalised engraved gifts",
   },
   cs: {
     pageTitle: "Feine Gravur | Personalizované dárky",
@@ -288,7 +286,6 @@ const ui = {
     ],
     termsNote:
       "Vzorový text pro prototyp. Údaje firmy, odstoupení od smlouvy, ochranu osobních údajů, dopravu a platby je potřeba před zveřejněním právně zkontrolovat a doplnit.",
-    footerSubtitle: "Demo obchod pro personalizované gravírované dárky",
   },
   fr: {
     pageTitle: "Feine Gravur | Cadeaux personnalisés",
@@ -375,7 +372,6 @@ const ui = {
     ],
     termsNote:
       "Texte exemple pour le prototype. Les informations de l'entreprise, le droit de rétractation, la confidentialité, la livraison et les moyens de paiement doivent être vérifiés juridiquement et complétés avant publication.",
-    footerSubtitle: "Boutique démo de cadeaux gravés personnalisés",
   },
   it: {
     pageTitle: "Feine Gravur | Regali personalizzati",
@@ -462,7 +458,6 @@ const ui = {
     ],
     termsNote:
       "Testo campione per il prototipo. Dati aziendali, diritto di recesso, privacy, spedizione e metodi di pagamento devono essere verificati legalmente e completati prima della pubblicazione.",
-    footerSubtitle: "Demo shop per regali incisi personalizzati",
   },
 };
 
@@ -486,7 +481,7 @@ const homeCopy = {
       "Personalised glass and wooden keepsakes that are easy to order and still feel truly personal.",
     primaryCta: "Start configuring",
     secondaryCta: "View products",
-    highlights: ["Custom text", "Choose a motiv", "Packed with care"],
+    highlights: ["Custom text", "Choose a motif", "Packed with care"],
     galleryLabel: "Product glimpses",
   },
   cs: {
@@ -527,8 +522,9 @@ const homeCopy = {
 const flowCopy = {
   de: {
     backHome: "Zur Startseite",
-    viewProduct: "Produkt ansehen",
     otherProducts: "Weitere Produkte",
+    catalogPageLead:
+      "Hier findest du alle vorbereiteten Produktlinien. Jede Karte zeigt ein großes Produktfoto, weitere Detailbilder und eine kurze Orientierung zur Personalisierung.",
     addedTitle: "Produkt wurde hinzugefügt",
     addedBody:
       "Die personalisierte Auswahl liegt jetzt im Warenkorb. Du kannst weiter einkaufen oder direkt zum Warenkorb wechseln.",
@@ -549,8 +545,9 @@ const flowCopy = {
   },
   en: {
     backHome: "Back to home",
-    viewProduct: "View product",
     otherProducts: "More products",
+    catalogPageLead:
+      "Browse all prepared product lines here. Each card shows one large product photo, supporting detail images and a short guide to personalisation.",
     addedTitle: "Product added",
     addedBody:
       "Your personalised selection is now in the cart. You can keep shopping or go straight to the cart.",
@@ -571,8 +568,9 @@ const flowCopy = {
   },
   cs: {
     backHome: "Zpět na úvod",
-    viewProduct: "Zobrazit produkt",
     otherProducts: "Další produkty",
+    catalogPageLead:
+      "Tady najdeš všechny připravené produktové řady. Každá karta má velkou fotku produktu, detailní snímky a krátký orientační popis personalizace.",
     addedTitle: "Produkt je v košíku",
     addedBody:
       "Personalizovaný produkt je přidaný v košíku. Můžeš pokračovat v nákupu nebo přejít rovnou do košíku.",
@@ -593,8 +591,9 @@ const flowCopy = {
   },
   fr: {
     backHome: "Retour à l'accueil",
-    viewProduct: "Voir le produit",
     otherProducts: "Autres produits",
+    catalogPageLead:
+      "Retrouvez ici toutes les gammes de produits préparées. Chaque carte présente une grande photo, des détails et une courte description de la personnalisation.",
     addedTitle: "Produit ajouté",
     addedBody:
       "Votre sélection personnalisée est dans le panier. Vous pouvez continuer vos achats ou aller au panier.",
@@ -615,8 +614,9 @@ const flowCopy = {
   },
   it: {
     backHome: "Torna alla home",
-    viewProduct: "Vedi prodotto",
     otherProducts: "Altri prodotti",
+    catalogPageLead:
+      "Qui trovi tutte le linee prodotto preparate. Ogni scheda mostra una foto grande, immagini di dettaglio e una breve descrizione della personalizzazione.",
     addedTitle: "Prodotto aggiunto",
     addedBody:
       "La selezione personalizzata è ora nel carrello. Puoi continuare gli acquisti o andare al carrello.",
@@ -721,8 +721,8 @@ const products = [
         material: "Glass or wood",
         size: "approx. 8 cm",
         lead:
-          "Personalised Christmas baubles with a name, short text and chosen motiv. Perfect as a small gift or for your own tree.",
-        personalization: "Name, year, heart, stars or custom motiv",
+          "Personalised Christmas baubles with a name, short text and chosen motif. Perfect as a small gift or for your own tree.",
+        personalization: "Name, year, heart, stars or custom motif",
         finishLabel: "Colour / shape",
       },
       cs: {
@@ -878,8 +878,8 @@ const products = [
         material: "Birch plywood",
         size: "approx. 15 x 4 cm",
         lead:
-          "Light wooden bookmark with engraving and coloured tassel. Name and motiv are placed to suit the shape.",
-        personalization: "Name, short quote or reading motiv",
+          "Light wooden bookmark with engraving and coloured tassel. Name and motif are placed to suit the shape.",
+        personalization: "Name, short quote or reading motif",
         finishLabel: "Tassel",
       },
       cs: {
@@ -993,16 +993,16 @@ const products = [
       },
       en: {
         category: "Keys",
-        badge: "Motiv series",
+        badge: "Motif series",
         name: "Wooden Keychain",
         shortName: "Keychain",
         delivery: "3-6 working days",
         material: "Round wooden disc",
         size: "approx. 5 cm",
         lead:
-          "Round wooden keychain with fine motiv engraving. Add a short name on the back or keep it as a clean motiv piece.",
+          "Round wooden keychain with fine motif engraving. Add a short name on the back or keep it as a clean motif piece.",
         personalization: "Name, initial or symbol",
-        finishLabel: "Motiv style",
+        finishLabel: "Motif style",
       },
       cs: {
         category: "Klíče",
@@ -1070,7 +1070,7 @@ const products = [
         src: "/products/wood-pendants-zodiac.jpeg",
         alt: {
           de: "Mehrere runde Holz-Anhänger mit gravierten Motiven",
-          en: "Several round wooden keychains with engraved motivs",
+          en: "Several round wooden keychains with engraved motifs",
           cs: "Více kulatých dřevěných přívěšků s gravírovanými motivy",
           fr: "Plusieurs porte-clés ronds en bois avec motifs gravés",
           it: "Diversi portachiavi rotondi in legno con motivi incisi",
@@ -1323,7 +1323,7 @@ const products = [
   },
 ];
 
-type PageView = "home" | "product" | "cart" | "terms";
+type PageView = "home" | "products" | "product" | "cart" | "terms";
 
 type RouteState = {
   view: PageView;
@@ -1343,6 +1343,10 @@ function parseRoute(pathname: string): RouteState {
 
   if (firstSegment === "kosik") {
     return { view: "cart" };
+  }
+
+  if (firstSegment === "produkty") {
+    return { view: "products" };
   }
 
   if (firstSegment === "agb") {
@@ -1445,6 +1449,8 @@ export default function Home({ initialPath = "/" }: HomeProps = {}) {
     document.title =
       currentView === "product"
         ? `${selectedProductCopy.name} | Feine Gravur`
+        : currentView === "products"
+          ? `${t.assortmentTitle} | Feine Gravur`
         : currentView === "cart"
           ? `${t.cartTitle} | Feine Gravur`
           : currentView === "terms"
@@ -1454,6 +1460,7 @@ export default function Home({ initialPath = "/" }: HomeProps = {}) {
     currentView,
     language,
     selectedProductCopy.name,
+    t.assortmentTitle,
     t.cartTitle,
     t.pageTitle,
     t.termsTitle,
@@ -1535,6 +1542,14 @@ export default function Home({ initialPath = "/" }: HomeProps = {}) {
     }
   }
 
+  function navigateProducts() {
+    setCurrentView("products");
+    setShowCartChoice(false);
+    setCheckoutMessage(false);
+    window.history.pushState(null, "", "/produkty");
+    scrollToPageTop();
+  }
+
   function navigateCart(sectionId?: string) {
     setCurrentView("cart");
     setShowCartChoice(false);
@@ -1604,9 +1619,6 @@ export default function Home({ initialPath = "/" }: HomeProps = {}) {
         </div>
         <div className="card-bottom">
           <strong>{formatPrice(product.price, language)}</strong>
-          <span className="card-action" aria-hidden="true">
-            {flow.viewProduct}
-          </span>
         </div>
       </button>
     );
@@ -1688,10 +1700,11 @@ export default function Home({ initialPath = "/" }: HomeProps = {}) {
             {home.navLabel}
           </a>
           <a
-            href="/#produkte"
+            className={currentView === "products" ? "active" : ""}
+            href="/produkty"
             onClick={(event) => {
               event.preventDefault();
-              navigateHome("produkte");
+              navigateProducts();
             }}
           >
             {t.nav.assortment}
@@ -1775,10 +1788,10 @@ export default function Home({ initialPath = "/" }: HomeProps = {}) {
                   </a>
                   <a
                     className="hero-secondary"
-                    href="/#produkte"
+                    href="/produkty"
                     onClick={(event) => {
                       event.preventDefault();
-                      navigateHome("produkte");
+                      navigateProducts();
                     }}
                   >
                     {home.secondaryCta}
@@ -1809,6 +1822,96 @@ export default function Home({ initialPath = "/" }: HomeProps = {}) {
                   </button>
                 );
               })}
+            </section>
+          </>
+        )}
+
+        {currentView === "products" && (
+          <>
+            <div className="page-toolbar catalog-toolbar">
+              <a
+                href="/"
+                onClick={(event) => {
+                  event.preventDefault();
+                  navigateHome();
+                }}
+              >
+                {flow.backHome}
+              </a>
+              <button type="button" onClick={() => navigateCart()}>
+                {flow.goToCart}
+              </button>
+            </div>
+
+            <section className="catalog-page" id="katalog" aria-labelledby="catalog-title">
+              <div className="section-heading cart-page-heading">
+                <div>
+                  <p className="section-kicker">{t.assortmentKicker}</p>
+                  <h1 id="catalog-title">{t.assortmentTitle}</h1>
+                </div>
+                <p>{flow.catalogPageLead}</p>
+              </div>
+
+              <div className="catalog-list">
+                {products.map((product) => {
+                  const productCopy = product.translations[language];
+                  const [mainPhoto, ...detailPhotos] = product.photos;
+                  const catalogDetails = detailPhotos.length > 0 ? detailPhotos : product.photos;
+
+                  return (
+                    <article className="catalog-product-card" key={product.id}>
+                      <div className="catalog-media">
+                        <button
+                          className="catalog-main-photo"
+                          type="button"
+                          aria-label={`${t.selectProduct}: ${productCopy.name}`}
+                          onClick={() => selectProduct(product.id)}
+                        >
+                          <img src={mainPhoto.src} alt={mainPhoto.alt[language]} />
+                        </button>
+                        <div className="catalog-detail-photos" aria-label={t.detailPhoto}>
+                          {catalogDetails.map((photo) => (
+                            <button
+                              key={photo.id}
+                              type="button"
+                              aria-label={photo.alt[language]}
+                              onClick={() => selectProduct(product.id)}
+                            >
+                              <img src={photo.src} alt="" aria-hidden="true" />
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="catalog-copy">
+                        <p className="section-kicker">{productCopy.category}</p>
+                        <h2>{productCopy.name}</h2>
+                        <p>{productCopy.lead}</p>
+                        <div className="catalog-meta">
+                          <span>{productCopy.delivery}</span>
+                          <span>{productCopy.material}</span>
+                          <span>{productCopy.size}</span>
+                          <span>{t.textLimit}</span>
+                        </div>
+                        <p className="catalog-personalization">
+                          <strong>{productCopy.finishLabel}:</strong>{" "}
+                          {productCopy.personalization}
+                        </p>
+                        <strong className="catalog-price">
+                          {formatPrice(product.price, language)}
+                        </strong>
+                        <button
+                          className="primary-button"
+                          type="button"
+                          onClick={() => selectProduct(product.id)}
+                        >
+                          {t.selectProduct}
+                        </button>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
             </section>
           </>
         )}
@@ -2001,8 +2104,7 @@ export default function Home({ initialPath = "/" }: HomeProps = {}) {
               id="related-products"
               aria-labelledby="related-title"
             >
-              <div className="section-heading">
-                <p className="section-kicker">{t.assortmentKicker}</p>
+              <div className="section-heading section-heading-left">
                 <h2 id="related-title">{flow.otherProducts}</h2>
               </div>
               <div className="product-card-grid">
@@ -2030,7 +2132,7 @@ export default function Home({ initialPath = "/" }: HomeProps = {}) {
                   {cartItems.length === 0 ? (
                     <div className="empty-state">
                       <p>{t.emptyCart}</p>
-                      <button type="button" onClick={() => navigateHome("produkte")}>
+                      <button type="button" onClick={() => navigateProducts()}>
                         {flow.cartEmptyAction}
                       </button>
                     </div>
@@ -2164,11 +2266,7 @@ export default function Home({ initialPath = "/" }: HomeProps = {}) {
       )}
 
       <footer className="shop-footer" id="kontakt">
-        <div>
-          <strong>Feine Gravur</strong>
-          <span>{t.footerSubtitle}</span>
-        </div>
-        <div className="footer-links">
+        <nav className="footer-links" aria-label={t.nav.assortment}>
           <a
             href="/"
             onClick={(event) => {
@@ -2179,10 +2277,10 @@ export default function Home({ initialPath = "/" }: HomeProps = {}) {
             {home.navLabel}
           </a>
           <a
-            href="/#produkte"
+            href="/produkty"
             onClick={(event) => {
               event.preventDefault();
-              navigateHome("produkte");
+              navigateProducts();
             }}
           >
             {t.nav.assortment}
@@ -2206,7 +2304,7 @@ export default function Home({ initialPath = "/" }: HomeProps = {}) {
             {t.nav.terms}
           </a>
           <a href="mailto:hallo@example.de">hallo@example.de</a>
-        </div>
+        </nav>
       </footer>
     </div>
   );

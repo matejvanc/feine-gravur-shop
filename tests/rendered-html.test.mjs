@@ -42,7 +42,7 @@ test("server-renders the multilingual personalized shop", async () => {
   assert.match(html, /Holz-Kugelschreiber/);
   assert.doesNotMatch(html, /Produkt ansehen/);
   assert.match(html, /\/produkt\/weihnachtskugeln/);
-  assert.match(html, /#produkte/);
+  assert.match(html, /\/produkty/);
   assert.match(html, /\/kosik/);
   assert.match(html, /\/agb/);
   assert.match(html, />DE</);
@@ -67,6 +67,15 @@ test("fallback routes serve product and cart paths for client routing", async ()
   assert.match(productHtml, /Text bis[\s\S]*12[\s\S]*Zeichen/);
   assert.match(productHtml, /In den Warenkorb/);
   assert.match(productHtml, /Weitere Produkte/);
+  assert.doesNotMatch(productHtml, /Produkt ansehen/);
+
+  const productsResponse = await render("/produkty");
+  assert.equal(productsResponse.status, 200);
+  const productsHtml = await productsResponse.text();
+  assert.match(productsHtml, /Personalisierbare Produkte/);
+  assert.match(productsHtml, /catalog-product-card/);
+  assert.match(productsHtml, /Gravierte Weihnachtskugeln/);
+  assert.match(productsHtml, /Holz-Kugelschreiber/);
 
   const cartResponse = await render("/kosik");
   assert.equal(cartResponse.status, 200);
@@ -107,7 +116,12 @@ test("starter preview files and dependencies are removed", async () => {
   assert.match(page, /className={`product-card/);
   assert.match(page, /productHref/);
   assert.match(page, /parseRoute/);
-  assert.match(page, /type PageView = "home" \| "product" \| "cart" \| "terms";/);
+  assert.match(page, /type PageView = "home" \| "products" \| "product" \| "cart" \| "terms";/);
+  assert.match(page, /navigateProducts/);
+  assert.match(page, /href="\/produkty"/);
+  assert.match(page, /catalog-product-card/);
+  assert.match(page, /catalogPageLead/);
+  assert.match(page, /section-heading-left/);
   assert.match(page, /navigateTerms/);
   assert.match(page, /href="\/agb"/);
   assert.match(page, /productId: "kugelschreiber"/);
@@ -132,11 +146,14 @@ test("starter preview files and dependencies are removed", async () => {
   assert.match(page, /terms: "Podmínky"/);
   assert.match(page, /terms: "CGV"/);
   assert.match(page, /terms: "Condizioni"/);
-  assert.match(page, /Logo motiv/);
+  assert.match(page, /logoLabel: "Logo motif"/);
+  assert.doesNotMatch(page, /viewProduct|card-action|footerSubtitle|Produkt ansehen/);
+  assert.doesNotMatch(page, /Demo-Shop|Demo shop for personalised engraved gifts|Boutique démo|Demo obchod/);
+  assert.doesNotMatch(styles, /shop-footer div/);
   assert.match(styles, /grid-template-columns: minmax\(220px, 1fr\) minmax\(450px, 540px\) minmax\(330px, 1fr\);/);
   assert.match(styles, /grid-template-columns: repeat\(4, minmax\(0, 1fr\)\);/);
   assert.match(page, /maxLength={TEXT_LIMIT}/);
-  assert.doesNotMatch(page, /kosik#agb|sortiment-title|id="sortiment"|Logo motif|chosen motif|custom motif|reading motif|Motif series|Motif style|engraved motifs/);
+  assert.doesNotMatch(page, /kosik#agb|sortiment-title|id="sortiment"|Selected motivs|Choose a motiv|chosen motiv|custom motiv|reading motiv|Motiv series|Motiv style|motiv engraving|engraved motivs/);
   assert.match(routeFallback, /CatchAllPage/);
   assert.match(routeFallback, /initialPath/);
   assert.match(layout, /Feine Gravur/);

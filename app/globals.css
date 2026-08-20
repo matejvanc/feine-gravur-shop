@@ -212,6 +212,7 @@ main {
 #start,
 #produkt,
 #produkte,
+#katalog,
 #related-products,
 #warenkorb,
 #details,
@@ -440,8 +441,7 @@ main {
 .color-option,
 .logo-option,
 .stepper button,
-.product-switcher button,
-.card-bottom button {
+.product-switcher button {
   background: #fffdf8;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -468,8 +468,7 @@ main {
 }
 
 .thumb-button span,
-.product-switcher button,
-.card-bottom button {
+.product-switcher button {
   font-weight: 780;
 }
 
@@ -495,8 +494,7 @@ main {
 .product-card p,
 .details-section p,
 .terms-section p,
-.preview-row span,
-.shop-footer span {
+.preview-row span {
   color: var(--muted);
 }
 
@@ -914,10 +912,114 @@ a:focus-visible {
 
 .products-section,
 .details-section,
-.terms-section {
+.terms-section,
+.catalog-page {
   margin: 0 auto;
   max-width: 1440px;
   padding: clamp(1rem, 3vw, 2.1rem) 0;
+}
+
+.catalog-toolbar {
+  margin-bottom: 1rem;
+}
+
+.catalog-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.catalog-product-card {
+  background: rgba(255, 255, 255, 0.91);
+  border: 1px solid rgba(31, 77, 58, 0.12);
+  border-radius: 8px;
+  box-shadow: 0 24px 70px rgba(45, 39, 30, 0.08);
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.4rem);
+  grid-template-columns: minmax(300px, 0.72fr) minmax(360px, 1fr);
+  padding: clamp(0.85rem, 2vw, 1.2rem);
+}
+
+.catalog-media {
+  min-width: 0;
+}
+
+.catalog-main-photo,
+.catalog-detail-photos button {
+  appearance: none;
+  background: var(--ivory);
+  border: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  padding: 0;
+  width: 100%;
+}
+
+.catalog-main-photo img {
+  aspect-ratio: 1.18;
+  display: block;
+  height: auto;
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+}
+
+.catalog-detail-photos {
+  display: grid;
+  gap: 0.6rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 0.65rem;
+}
+
+.catalog-detail-photos img {
+  aspect-ratio: 1.18;
+  display: block;
+  height: auto;
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+}
+
+.catalog-copy {
+  align-content: center;
+  display: grid;
+  gap: 0.85rem;
+  min-width: 0;
+}
+
+.catalog-copy p {
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.catalog-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.catalog-meta span {
+  background: #f5f0e7;
+  border: 1px solid rgba(184, 137, 77, 0.28);
+  border-radius: 999px;
+  color: #4d463a;
+  font-size: 0.82rem;
+  font-weight: 760;
+  padding: 0.38rem 0.65rem;
+}
+
+.catalog-personalization strong,
+.catalog-price {
+  color: var(--forest-deep);
+}
+
+.catalog-price {
+  font-size: 1.35rem;
+}
+
+.catalog-copy .primary-button {
+  justify-self: start;
+  min-width: 184px;
 }
 
 .cart-page {
@@ -1030,6 +1132,11 @@ a:focus-visible {
   margin-bottom: 1rem;
 }
 
+.section-heading-left {
+  align-items: start;
+  justify-content: flex-start;
+}
+
 .product-card-grid {
   display: grid;
   gap: 1rem;
@@ -1077,24 +1184,12 @@ a:focus-visible {
   align-items: center;
   display: flex;
   gap: 0.65rem;
-  justify-content: space-between;
-}
-
-.card-bottom button {
-  min-height: 40px;
-  padding: 0.45rem 0.7rem;
-}
-
-.card-action {
-  background: #fffdf8;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  color: var(--ink);
-  display: inline-flex;
-  font-weight: 780;
   justify-content: center;
-  min-height: 40px;
-  padding: 0.55rem 0.7rem;
+  text-align: center;
+}
+
+.card-bottom strong {
+  width: 100%;
 }
 
 .detail-columns,
@@ -1143,21 +1238,16 @@ a:focus-visible {
   align-items: center;
   border-top: 1px solid var(--line);
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   margin: 0 clamp(1rem, 3vw, 2.5rem);
   padding: 1.4rem 0 2rem;
-}
-
-.shop-footer div {
-  display: grid;
-  gap: 0.22rem;
 }
 
 .footer-links {
   display: flex;
   flex-wrap: wrap;
   gap: 0.85rem;
-  justify-content: end;
+  justify-content: center;
 }
 
 .footer-links a {
@@ -1247,6 +1337,7 @@ a:focus-visible {
   }
 
   .product-section,
+  .catalog-product-card,
   .cart-page-grid,
   .product-card-grid,
   .detail-columns,
@@ -1348,8 +1439,6 @@ a:focus-visible {
 
   .price-row,
   .quantity-row,
-  .shop-footer,
-  .card-bottom,
   .cart-page-line {
     align-items: stretch;
     flex-direction: column;
@@ -1373,6 +1462,14 @@ a:focus-visible {
   }
 
   .footer-links {
-    justify-content: flex-start;
+    justify-content: center;
+  }
+
+  .catalog-detail-photos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .catalog-copy .primary-button {
+    justify-self: stretch;
   }
 }
