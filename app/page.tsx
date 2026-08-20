@@ -36,7 +36,7 @@ const ui = {
     brandSubtitle: "Personalisierte Geschenke",
     nav: {
       configurator: "Konfigurator",
-      assortment: "Shop",
+      assortment: "Produkte",
       details: "Details",
       terms: "AGB",
     },
@@ -123,9 +123,9 @@ const ui = {
     brandSubtitle: "Personalised gifts",
     nav: {
       configurator: "Configurator",
-      assortment: "Shop",
+      assortment: "Products",
       details: "Details",
-      terms: "AGB",
+      terms: "Terms",
     },
     languageLabel: "Change language",
     cartTitle: "Cart",
@@ -210,9 +210,9 @@ const ui = {
     brandSubtitle: "Personalizované dárky",
     nav: {
       configurator: "Konfigurátor",
-      assortment: "Shop",
+      assortment: "Produkty",
       details: "Detaily",
-      terms: "AGB",
+      terms: "Podmínky",
     },
     languageLabel: "Změnit jazyk",
     cartTitle: "Košík",
@@ -297,9 +297,9 @@ const ui = {
     brandSubtitle: "Cadeaux personnalisés",
     nav: {
       configurator: "Configurateur",
-      assortment: "Shop",
+      assortment: "Produits",
       details: "Détails",
-      terms: "AGB",
+      terms: "CGV",
     },
     languageLabel: "Changer de langue",
     cartTitle: "Panier",
@@ -384,9 +384,9 @@ const ui = {
     brandSubtitle: "Regali personalizzati",
     nav: {
       configurator: "Configuratore",
-      assortment: "Shop",
+      assortment: "Prodotti",
       details: "Dettagli",
-      terms: "AGB",
+      terms: "Condizioni",
     },
     languageLabel: "Cambia lingua",
     cartTitle: "Carrello",
@@ -479,7 +479,7 @@ const homeCopy = {
     galleryLabel: "Einblicke ins Sortiment",
   },
   en: {
-    navLabel: "Start",
+    navLabel: "Home",
     eyebrow: "Engraved gifts",
     title: "Feine Gravur",
     lead:
@@ -490,7 +490,7 @@ const homeCopy = {
     galleryLabel: "Product glimpses",
   },
   cs: {
-    navLabel: "Start",
+    navLabel: "Úvod",
     eyebrow: "Dárky s gravírováním",
     title: "Feine Gravur",
     lead:
@@ -501,7 +501,7 @@ const homeCopy = {
     galleryLabel: "Ukázky sortimentu",
   },
   fr: {
-    navLabel: "Start",
+    navLabel: "Accueil",
     eyebrow: "Cadeaux gravés",
     title: "Feine Gravur",
     lead:
@@ -512,7 +512,7 @@ const homeCopy = {
     galleryLabel: "Aperçu des produits",
   },
   it: {
-    navLabel: "Start",
+    navLabel: "Inizio",
     eyebrow: "Regali incisi",
     title: "Feine Gravur",
     lead:

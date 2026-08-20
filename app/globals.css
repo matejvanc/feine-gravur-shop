@@ -71,7 +71,7 @@ button:disabled {
   border-bottom: 1px solid rgba(31, 77, 58, 0.12);
   display: grid;
   gap: 1.5rem;
-  grid-template-columns: minmax(220px, 1fr) minmax(360px, auto) minmax(330px, 1fr);
+  grid-template-columns: minmax(220px, 1fr) minmax(450px, 540px) minmax(330px, 1fr);
   min-height: 76px;
   padding: 0.85rem clamp(1rem, 4vw, 3rem);
   position: sticky;
@@ -122,10 +122,11 @@ button:disabled {
   border-radius: 8px;
   display: grid;
   gap: 0.2rem;
-  grid-template-columns: repeat(4, minmax(82px, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   justify-self: center;
-  min-width: min(100%, 430px);
+  min-width: 0;
   padding: 0.22rem;
+  width: 100%;
 }
 
 .main-nav a,
@@ -144,6 +145,7 @@ button:disabled {
   padding: 0.35rem 0.58rem;
   text-align: center;
   white-space: nowrap;
+  width: 100%;
 }
 
 .main-nav a:hover,
@@ -1179,6 +1181,28 @@ a:focus-visible {
 
   .intro-gallery {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1120px) {
+  .shop-header {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    position: static;
+  }
+
+  .main-nav {
+    overflow-x: auto;
+    width: 100%;
+  }
+
+  .header-actions {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    min-width: 0;
+    width: 100%;
   }
 }
 

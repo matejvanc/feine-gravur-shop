@@ -50,7 +50,10 @@ test("server-renders the multilingual personalized shop", async () => {
   assert.match(html, />CS</);
   assert.match(html, />FR</);
   assert.match(html, />IT</);
+  assert.match(html, />Start</);
+  assert.match(html, />Produkte</);
   assert.match(html, /Warenkorb/);
+  assert.match(html, />AGB</);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|react-loading-skeleton/i);
 });
 
@@ -82,11 +85,12 @@ test("fallback routes serve product and cart paths for client routing", async ()
 });
 
 test("starter preview files and dependencies are removed", async () => {
-  const [page, routeFallback, layout, packageJson] = await Promise.all([
+  const [page, routeFallback, layout, packageJson, styles] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/[...path]/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
   ]);
 
   assert.match(page, /const TEXT_LIMIT = 12;/);
@@ -116,7 +120,21 @@ test("starter preview files and dependencies are removed", async () => {
   assert.match(page, /Engraved Christmas Baubles/);
   assert.match(page, /Boules de Noël gravées/);
   assert.match(page, /Palline di Natale incise/);
+  assert.match(page, /navLabel: "Home"/);
+  assert.match(page, /navLabel: "Úvod"/);
+  assert.match(page, /navLabel: "Accueil"/);
+  assert.match(page, /navLabel: "Inizio"/);
+  assert.match(page, /assortment: "Products"/);
+  assert.match(page, /assortment: "Produkty"/);
+  assert.match(page, /assortment: "Produits"/);
+  assert.match(page, /assortment: "Prodotti"/);
+  assert.match(page, /terms: "Terms"/);
+  assert.match(page, /terms: "Podmínky"/);
+  assert.match(page, /terms: "CGV"/);
+  assert.match(page, /terms: "Condizioni"/);
   assert.match(page, /Logo motiv/);
+  assert.match(styles, /grid-template-columns: minmax\(220px, 1fr\) minmax\(450px, 540px\) minmax\(330px, 1fr\);/);
+  assert.match(styles, /grid-template-columns: repeat\(4, minmax\(0, 1fr\)\);/);
   assert.match(page, /maxLength={TEXT_LIMIT}/);
   assert.doesNotMatch(page, /kosik#agb|sortiment-title|id="sortiment"|Logo motif|chosen motif|custom motif|reading motif|Motif series|Motif style|engraved motifs/);
   assert.match(routeFallback, /CatchAllPage/);
