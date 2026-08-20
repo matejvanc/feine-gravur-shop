@@ -466,6 +466,83 @@ const ui = {
   },
 };
 
+const homeCopy = {
+  de: {
+    navLabel: "Start",
+    eyebrow: "Geschenke mit Gravur",
+    title: "Feine Gravur",
+    lead:
+      "Personalisierte Kleinigkeiten aus Glas und Holz, die schnell bestellt sind und trotzdem sehr persönlich wirken.",
+    primaryCta: "Jetzt konfigurieren",
+    secondaryCta: "Sortiment ansehen",
+    highlights: ["Eigener Text", "Motiv auswählen", "Liebevoll verpackt"],
+    galleryLabel: "Einblicke ins Sortiment",
+  },
+  en: {
+    navLabel: "Home",
+    eyebrow: "Engraved gifts",
+    title: "Feine Gravur",
+    lead:
+      "Personalised glass and wooden keepsakes that are easy to order and still feel truly personal.",
+    primaryCta: "Start configuring",
+    secondaryCta: "View products",
+    highlights: ["Custom text", "Choose a motif", "Packed with care"],
+    galleryLabel: "Product glimpses",
+  },
+  cs: {
+    navLabel: "Úvod",
+    eyebrow: "Dárky s gravírováním",
+    title: "Feine Gravur",
+    lead:
+      "Personalizované drobnosti ze skla a dřeva, které se objednávají jednoduše a přitom působí opravdu osobně.",
+    primaryCta: "Začít konfigurovat",
+    secondaryCta: "Zobrazit produkty",
+    highlights: ["Vlastní text", "Výběr motivu", "Pečlivě zabalené"],
+    galleryLabel: "Ukázky sortimentu",
+  },
+  fr: {
+    navLabel: "Accueil",
+    eyebrow: "Cadeaux gravés",
+    title: "Feine Gravur",
+    lead:
+      "De petites attentions personnalisées en verre et en bois, faciles à commander et vraiment personnelles.",
+    primaryCta: "Configurer",
+    secondaryCta: "Voir les produits",
+    highlights: ["Texte personnalisé", "Choix du motif", "Emballé avec soin"],
+    galleryLabel: "Aperçu des produits",
+  },
+  it: {
+    navLabel: "Home",
+    eyebrow: "Regali incisi",
+    title: "Feine Gravur",
+    lead:
+      "Piccoli ricordi personalizzati in vetro e legno, semplici da ordinare e davvero personali.",
+    primaryCta: "Configura ora",
+    secondaryCta: "Vedi prodotti",
+    highlights: ["Testo personalizzato", "Scegli il motivo", "Confezionato con cura"],
+    galleryLabel: "Anteprima prodotti",
+  },
+};
+
+const introPhotos = [
+  {
+    productId: "weihnachtskugeln",
+    src: "/products/christmas-baubles-main.jpeg",
+  },
+  {
+    productId: "lesezeichen",
+    src: "/products/wood-bookmark-page.jpeg",
+  },
+  {
+    productId: "anhaenger",
+    src: "/products/wood-pendants-zodiac.jpeg",
+  },
+  {
+    productId: "flaschenoeffner",
+    src: "/products/wood-opener-pen-set.jpeg",
+  },
+];
+
 const logoOptions = [
   {
     id: "herz",
@@ -622,6 +699,17 @@ const products = [
       },
     ],
     photos: [
+      {
+        id: "main",
+        src: "/products/christmas-baubles-main.jpeg",
+        alt: {
+          de: "Hauptgrafik für gravierte Weihnachtskugeln",
+          en: "Main graphic for engraved Christmas baubles",
+          cs: "Hlavní grafika pro gravírované vánoční ozdoby",
+          fr: "Visuel principal pour boules de Noël gravées",
+          it: "Grafica principale per palline di Natale incise",
+        },
+      },
       {
         id: "wrapped",
         src: "/products/christmas-baubles-wrapped.jpeg",
@@ -1159,6 +1247,7 @@ export default function Home() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   const t = ui[language];
+  const home = homeCopy[language];
   const selectedProduct = getProduct(selectedProductId);
   const selectedProductCopy = selectedProduct.translations[language];
   const selectedPhoto =
@@ -1182,11 +1271,20 @@ export default function Home() {
     document.title = t.pageTitle;
   }, [language, t.pageTitle]);
 
-  function selectProduct(productId: string) {
+  function selectProduct(productId: string, scrollToConfigurator = false) {
     const nextProduct = getProduct(productId);
     setSelectedProductId(nextProduct.id);
     setSelectedPhotoId(nextProduct.photos[0].id);
     setSelectedFinishId(nextProduct.finishes[0].id);
+
+    if (scrollToConfigurator) {
+      window.requestAnimationFrame(() => {
+        document.getElementById("produkt")?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      });
+    }
   }
 
   function addToCart(event: FormEvent<HTMLFormElement>) {
@@ -1210,7 +1308,7 @@ export default function Home() {
       <div className="top-notice">{t.notice}</div>
 
       <header className="shop-header">
-        <a className="brand" href="#produkt" aria-label="Feine Gravur">
+        <a className="brand" href="#start" aria-label="Feine Gravur">
           <span className="brand-mark">FG</span>
           <span>
             <strong>Feine Gravur</strong>
@@ -1218,6 +1316,7 @@ export default function Home() {
           </span>
         </a>
         <nav className="main-nav" aria-label={t.nav.configurator}>
+          <a href="#start">{home.navLabel}</a>
           <a href="#produkt">{t.nav.configurator}</a>
           <a href="#sortiment">{t.nav.assortment}</a>
           <a href="#details">{t.nav.details}</a>
@@ -1245,6 +1344,55 @@ export default function Home() {
       </header>
 
       <main>
+        <section
+          className="home-hero"
+          id="start"
+          aria-labelledby="home-title"
+          style={
+            {
+              "--hero-image": "url('/products/christmas-baubles-main.jpeg')",
+            } as CSSProperties
+          }
+        >
+          <div className="home-hero-copy">
+            <p className="section-kicker">{home.eyebrow}</p>
+            <h1 id="home-title">{home.title}</h1>
+            <p>{home.lead}</p>
+            <div className="hero-actions">
+              <a className="hero-primary" href="#produkt">
+                {home.primaryCta}
+              </a>
+              <a className="hero-secondary" href="#sortiment">
+                {home.secondaryCta}
+              </a>
+            </div>
+            <div className="hero-highlights" aria-label={home.galleryLabel}>
+              {home.highlights.map((highlight) => (
+                <span key={highlight}>{highlight}</span>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="intro-gallery" aria-label={home.galleryLabel}>
+          {introPhotos.map((photo) => {
+            const product = getProduct(photo.productId);
+            const productCopy = product.translations[language];
+
+            return (
+              <button
+                className="intro-photo"
+                key={photo.productId}
+                type="button"
+                onClick={() => selectProduct(product.id, true)}
+              >
+                <img src={photo.src} alt={productCopy.name} />
+                <span>{productCopy.shortName}</span>
+              </button>
+            );
+          })}
+        </section>
+
         <section className="product-section" id="produkt" aria-labelledby="product-title">
           <div className="gallery-column">
             <div className="product-photo-frame">
@@ -1468,9 +1616,12 @@ export default function Home() {
               const productCopy = product.translations[language];
 
               return (
-                <article
+                <button
                   className={`product-card ${selectedProduct.id === product.id ? "selected" : ""}`}
                   key={product.id}
+                  type="button"
+                  aria-pressed={selectedProduct.id === product.id}
+                  onClick={() => selectProduct(product.id, true)}
                 >
                   <img src={product.photos[0].src} alt={product.photos[0].alt[language]} />
                   <div>
@@ -1480,11 +1631,11 @@ export default function Home() {
                   </div>
                   <div className="card-bottom">
                     <strong>{formatPrice(product.price, language)}</strong>
-                    <button type="button" onClick={() => selectProduct(product.id)}>
+                    <span className="card-action" aria-hidden="true">
                       {t.selectProduct}
-                    </button>
+                    </span>
                   </div>
-                </article>
+                </button>
               );
             })}
           </div>

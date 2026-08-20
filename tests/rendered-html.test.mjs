@@ -33,6 +33,8 @@ test("server-renders the multilingual personalized shop", async () => {
   const html = await response.text();
   assert.match(html, /<html[^>]*lang=["']de["']/i);
   assert.match(html, /Feine Gravur/);
+  assert.match(html, /Geschenke mit Gravur/);
+  assert.match(html, /christmas-baubles-main\.jpeg/);
   assert.match(html, /Gravierte Weihnachtskugeln/);
   assert.match(html, /Holz-Lesezeichen/);
   assert.match(html, /Holz-Anhänger/);
@@ -63,6 +65,10 @@ test("starter preview files and dependencies are removed", async () => {
   assert.match(page, /useState<LanguageCode>\("de"\)/);
   assert.match(page, /language-switcher/);
   assert.match(page, /document\.documentElement\.lang = language/);
+  assert.match(page, /const homeCopy/);
+  assert.match(page, /intro-gallery/);
+  assert.match(page, /scrollIntoView/);
+  assert.match(page, /className={`product-card/);
   assert.match(page, /Gravírované vánoční ozdoby/);
   assert.match(page, /Engraved Christmas Baubles/);
   assert.match(page, /Boules de Noël gravées/);
@@ -72,5 +78,6 @@ test("starter preview files and dependencies are removed", async () => {
   assert.doesNotMatch(layout, /Starter Project|codex-preview/);
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);
 
+  await access(new URL("../public/products/christmas-baubles-main.jpeg", import.meta.url));
   await assert.rejects(access(new URL("app/_sites-preview", templateRoot)));
 });
