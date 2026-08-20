@@ -524,6 +524,119 @@ const homeCopy = {
   },
 };
 
+const flowCopy = {
+  de: {
+    backHome: "Zur Startseite",
+    viewProduct: "Produkt ansehen",
+    otherProducts: "Weitere Produkte",
+    addedTitle: "Produkt wurde hinzugefügt",
+    addedBody:
+      "Die personalisierte Auswahl liegt jetzt im Warenkorb. Du kannst weiter einkaufen oder direkt zum Warenkorb wechseln.",
+    continueShopping: "Weiter einkaufen",
+    goToCart: "Zum Warenkorb",
+    cartPageKicker: "Warenkorb",
+    cartPageTitle: "Deine Auswahl",
+    cartPageLead:
+      "Prüfe hier alle personalisierten Produkte. Zahlung, Versand und finale Bestelldaten werden im nächsten Schritt ergänzt.",
+    removeItem: "Entfernen",
+    cartEmptyAction: "Produkte ansehen",
+    checkoutTitle: "Checkout",
+    checkoutCta: "Bestellung vorbereiten",
+    checkoutNote:
+      "Der Checkout ist vorbereitet. Zahlungsarten, Versand und Pflichtangaben werden später ergänzt.",
+    checkoutMessage:
+      "Danke. Der nächste Schritt wird die echte Bestell- und Zahlungsabwicklung.",
+  },
+  en: {
+    backHome: "Back to home",
+    viewProduct: "View product",
+    otherProducts: "More products",
+    addedTitle: "Product added",
+    addedBody:
+      "Your personalised selection is now in the cart. You can keep shopping or go straight to the cart.",
+    continueShopping: "Keep shopping",
+    goToCart: "Go to cart",
+    cartPageKicker: "Cart",
+    cartPageTitle: "Your selection",
+    cartPageLead:
+      "Review all personalised products here. Payment, shipping and final order details will be added next.",
+    removeItem: "Remove",
+    cartEmptyAction: "View products",
+    checkoutTitle: "Checkout",
+    checkoutCta: "Prepare order",
+    checkoutNote:
+      "Checkout is prepared. Payment methods, shipping and legal details will be added later.",
+    checkoutMessage:
+      "Thank you. The next step will be the real order and payment flow.",
+  },
+  cs: {
+    backHome: "Zpět na úvod",
+    viewProduct: "Zobrazit produkt",
+    otherProducts: "Další produkty",
+    addedTitle: "Produkt je v košíku",
+    addedBody:
+      "Personalizovaný produkt je přidaný v košíku. Můžeš pokračovat v nákupu nebo přejít rovnou do košíku.",
+    continueShopping: "Pokračovat v nákupu",
+    goToCart: "Přejít do košíku",
+    cartPageKicker: "Košík",
+    cartPageTitle: "Tvůj výběr",
+    cartPageLead:
+      "Tady uvidíš všechny personalizované produkty. Platby, dopravu a finální objednávkové údaje doplníme v dalším kroku.",
+    removeItem: "Odebrat",
+    cartEmptyAction: "Zobrazit produkty",
+    checkoutTitle: "Checkout",
+    checkoutCta: "Připravit objednávku",
+    checkoutNote:
+      "Checkout je připravený. Platební metody, doprava a povinné údaje se doplní později.",
+    checkoutMessage:
+      "Děkujeme. Další krok bude skutečné odeslání objednávky a platba.",
+  },
+  fr: {
+    backHome: "Retour à l'accueil",
+    viewProduct: "Voir le produit",
+    otherProducts: "Autres produits",
+    addedTitle: "Produit ajouté",
+    addedBody:
+      "Votre sélection personnalisée est dans le panier. Vous pouvez continuer vos achats ou aller au panier.",
+    continueShopping: "Continuer les achats",
+    goToCart: "Aller au panier",
+    cartPageKicker: "Panier",
+    cartPageTitle: "Votre sélection",
+    cartPageLead:
+      "Vérifiez ici tous les produits personnalisés. Le paiement, la livraison et les détails finaux seront ajoutés ensuite.",
+    removeItem: "Retirer",
+    cartEmptyAction: "Voir les produits",
+    checkoutTitle: "Paiement",
+    checkoutCta: "Préparer la commande",
+    checkoutNote:
+      "Le paiement est préparé. Les moyens de paiement, la livraison et les mentions légales seront ajoutés plus tard.",
+    checkoutMessage:
+      "Merci. La prochaine étape sera le vrai parcours de commande et de paiement.",
+  },
+  it: {
+    backHome: "Torna alla home",
+    viewProduct: "Vedi prodotto",
+    otherProducts: "Altri prodotti",
+    addedTitle: "Prodotto aggiunto",
+    addedBody:
+      "La selezione personalizzata è ora nel carrello. Puoi continuare gli acquisti o andare al carrello.",
+    continueShopping: "Continua gli acquisti",
+    goToCart: "Vai al carrello",
+    cartPageKicker: "Carrello",
+    cartPageTitle: "La tua selezione",
+    cartPageLead:
+      "Controlla qui tutti i prodotti personalizzati. Pagamento, spedizione e dati finali saranno aggiunti in seguito.",
+    removeItem: "Rimuovi",
+    cartEmptyAction: "Vedi prodotti",
+    checkoutTitle: "Checkout",
+    checkoutCta: "Prepara ordine",
+    checkoutNote:
+      "Il checkout è preparato. Metodi di pagamento, spedizione e dati legali saranno aggiunti più avanti.",
+    checkoutMessage:
+      "Grazie. Il prossimo passo sarà il vero flusso di ordine e pagamento.",
+  },
+};
+
 const introPhotos = [
   {
     productId: "weihnachtskugeln",
@@ -1206,6 +1319,39 @@ const products = [
   },
 ];
 
+type PageView = "home" | "product" | "cart";
+
+type RouteState = {
+  view: PageView;
+  productId?: string;
+};
+
+function productHref(productId: string) {
+  return `/produkt/${productId}`;
+}
+
+function parseRoute(pathname: string): RouteState {
+  const [firstSegment, secondSegment] = pathname.split("/").filter(Boolean);
+
+  if (firstSegment === "produkt" && secondSegment && products.some((product) => product.id === secondSegment)) {
+    return { view: "product", productId: secondSegment };
+  }
+
+  if (firstSegment === "kosik") {
+    return { view: "cart" };
+  }
+
+  return { view: "home" };
+}
+
+function getInitialRoute(initialPath = "/"): RouteState {
+  if (typeof window === "undefined") {
+    return parseRoute(initialPath);
+  }
+
+  return parseRoute(window.location.pathname);
+}
+
 type CartItem = {
   id: number;
   productId: string;
@@ -1236,18 +1382,34 @@ function getFinish(productId: string, finishId: string) {
   return product.finishes.find((finish) => finish.id === finishId) ?? product.finishes[0];
 }
 
-export default function Home() {
+type HomeProps = {
+  initialPath?: string;
+};
+
+export default function Home({ initialPath = "/" }: HomeProps = {}) {
+  const initialRoute = getInitialRoute(initialPath);
   const [language, setLanguage] = useState<LanguageCode>("de");
-  const [selectedProductId, setSelectedProductId] = useState(products[0].id);
-  const [selectedPhotoId, setSelectedPhotoId] = useState(products[0].photos[0].id);
-  const [selectedFinishId, setSelectedFinishId] = useState(products[0].finishes[0].id);
+  const [currentView, setCurrentView] = useState<PageView>(() => initialRoute.view);
+  const [selectedProductId, setSelectedProductId] = useState(
+    () => initialRoute.productId ?? products[0].id,
+  );
+  const [selectedPhotoId, setSelectedPhotoId] = useState(
+    () => getProduct(initialRoute.productId ?? products[0].id).photos[0].id,
+  );
+  const [selectedFinishId, setSelectedFinishId] = useState(
+    () => getProduct(initialRoute.productId ?? products[0].id).finishes[0].id,
+  );
   const [customText, setCustomText] = useState("Mila");
   const [selectedLogoId, setSelectedLogoId] = useState(logoOptions[0].id);
   const [quantity, setQuantity] = useState(1);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [cartHydrated, setCartHydrated] = useState(false);
+  const [showCartChoice, setShowCartChoice] = useState(false);
+  const [checkoutMessage, setCheckoutMessage] = useState(false);
 
   const t = ui[language];
   const home = homeCopy[language];
+  const flow = flowCopy[language];
   const selectedProduct = getProduct(selectedProductId);
   const selectedProductCopy = selectedProduct.translations[language];
   const selectedPhoto =
@@ -1265,26 +1427,116 @@ export default function Home() {
     () => cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
     [cartItems],
   );
+  const cartQuantity = useMemo(
+    () => cartItems.reduce((sum, item) => sum + item.quantity, 0),
+    [cartItems],
+  );
 
   useEffect(() => {
     document.documentElement.lang = language;
-    document.title = t.pageTitle;
-  }, [language, t.pageTitle]);
+    document.title =
+      currentView === "product"
+        ? `${selectedProductCopy.name} | Feine Gravur`
+        : currentView === "cart"
+          ? `${t.cartTitle} | Feine Gravur`
+          : t.pageTitle;
+  }, [currentView, language, selectedProductCopy.name, t.cartTitle, t.pageTitle]);
 
-  function selectProduct(productId: string, scrollToConfigurator = false) {
+  useEffect(() => {
+    try {
+      const storedCart = window.localStorage.getItem("feine-gravur-cart");
+      if (storedCart) {
+        const parsedCart = JSON.parse(storedCart) as CartItem[];
+        if (Array.isArray(parsedCart)) {
+          setCartItems(parsedCart);
+        }
+      }
+    } catch {
+      window.localStorage.removeItem("feine-gravur-cart");
+    } finally {
+      setCartHydrated(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!cartHydrated) {
+      return;
+    }
+
+    window.localStorage.setItem("feine-gravur-cart", JSON.stringify(cartItems));
+  }, [cartHydrated, cartItems]);
+
+  useEffect(() => {
+    function syncRoute() {
+      const route = parseRoute(window.location.pathname);
+      setCurrentView(route.view);
+      setShowCartChoice(false);
+
+      if (route.productId) {
+        applyProductSelection(route.productId);
+      }
+    }
+
+    window.addEventListener("popstate", syncRoute);
+    syncRoute();
+
+    return () => window.removeEventListener("popstate", syncRoute);
+  }, []);
+
+  function applyProductSelection(productId: string) {
     const nextProduct = getProduct(productId);
     setSelectedProductId(nextProduct.id);
     setSelectedPhotoId(nextProduct.photos[0].id);
     setSelectedFinishId(nextProduct.finishes[0].id);
+  }
 
-    if (scrollToConfigurator) {
-      window.requestAnimationFrame(() => {
-        document.getElementById("produkt")?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
+  function scrollToPageTop() {
+    window.requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }
+
+  function scrollToSection(sectionId: string) {
+    window.requestAnimationFrame(() => {
+      document.getElementById(sectionId)?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
       });
+    });
+  }
+
+  function navigateHome(sectionId?: string) {
+    setCurrentView("home");
+    setShowCartChoice(false);
+    setCheckoutMessage(false);
+    window.history.pushState(null, "", sectionId ? `/#${sectionId}` : "/");
+
+    if (sectionId) {
+      scrollToSection(sectionId);
+    } else {
+      scrollToPageTop();
     }
+  }
+
+  function navigateCart(sectionId?: string) {
+    setCurrentView("cart");
+    setShowCartChoice(false);
+    window.history.pushState(null, "", sectionId ? `/kosik#${sectionId}` : "/kosik");
+
+    if (sectionId) {
+      scrollToSection(sectionId);
+    } else {
+      scrollToPageTop();
+    }
+  }
+
+  function selectProduct(productId: string) {
+    applyProductSelection(productId);
+    setCurrentView("product");
+    setShowCartChoice(false);
+    setCheckoutMessage(false);
+    window.history.pushState(null, "", productHref(productId));
+    scrollToPageTop();
   }
 
   function addToCart(event: FormEvent<HTMLFormElement>) {
@@ -1301,6 +1553,82 @@ export default function Home() {
         price: selectedProduct.price,
       },
     ]);
+    setShowCartChoice(true);
+  }
+
+  function removeCartItem(itemId: number) {
+    setCartItems((items) => items.filter((item) => item.id !== itemId));
+  }
+
+  function renderProductCard(product: (typeof products)[number], selected = false) {
+    const productCopy = product.translations[language];
+
+    return (
+      <button
+        className={`product-card ${selected ? "selected" : ""}`}
+        key={product.id}
+        type="button"
+        aria-pressed={selected}
+        onClick={() => selectProduct(product.id)}
+      >
+        <img src={product.photos[0].src} alt={product.photos[0].alt[language]} />
+        <div>
+          <p className="section-kicker">{productCopy.category}</p>
+          <h3>{productCopy.name}</h3>
+          <p>{productCopy.personalization}</p>
+        </div>
+        <div className="card-bottom">
+          <strong>{formatPrice(product.price, language)}</strong>
+          <span className="card-action" aria-hidden="true">
+            {flow.viewProduct}
+          </span>
+        </div>
+      </button>
+    );
+  }
+
+  function renderCartSummary() {
+    return (
+      <aside className="cart-summary" id="warenkorb" aria-label={t.cartTitle}>
+        <div>
+          <p className="section-kicker">{t.cartTitle}</p>
+          <h2>{t.cartHeading}</h2>
+        </div>
+        {cartItems.length === 0 ? (
+          <p className="empty-cart">{t.emptyCart}</p>
+        ) : (
+          <div className="cart-list" aria-live="polite">
+            {cartItems.map((item) => {
+              const product = getProduct(item.productId);
+              const finish = getFinish(item.productId, item.finishId);
+              const logo = getLogo(item.logoId);
+
+              return (
+                <article className="cart-line" key={item.id}>
+                  <div>
+                    <strong>{product.translations[language].shortName}</strong>
+                    <span>
+                      {item.customText} / {logo.label[language]}
+                    </span>
+                    <span>{finish.label[language]}</span>
+                  </div>
+                  <span>
+                    {item.quantity} x {formatPrice(item.price, language)}
+                  </span>
+                </article>
+              );
+            })}
+          </div>
+        )}
+        <div className="cart-total">
+          <span>{t.subtotal}</span>
+          <strong>{formatPrice(cartTotal, language)}</strong>
+        </div>
+        <button className="secondary-button" type="button" onClick={() => navigateCart()}>
+          {flow.goToCart}
+        </button>
+      </aside>
+    );
   }
 
   return (
@@ -1308,19 +1636,58 @@ export default function Home() {
       <div className="top-notice">{t.notice}</div>
 
       <header className="shop-header">
-        <a className="brand" href="#start" aria-label="Feine Gravur">
+        <a
+          className="brand"
+          href="/"
+          aria-label="Feine Gravur"
+          onClick={(event) => {
+            event.preventDefault();
+            navigateHome();
+          }}
+        >
           <span className="brand-mark">FG</span>
           <span>
             <strong>Feine Gravur</strong>
             <small>{t.brandSubtitle}</small>
           </span>
         </a>
-        <nav className="main-nav" aria-label={t.nav.configurator}>
-          <a href="#start">{home.navLabel}</a>
-          <a href="#produkt">{t.nav.configurator}</a>
-          <a href="#sortiment">{t.nav.assortment}</a>
-          <a href="#details">{t.nav.details}</a>
-          <a href="#agb">{t.nav.terms}</a>
+        <nav className="main-nav" aria-label={t.nav.assortment}>
+          <a
+            href="/"
+            onClick={(event) => {
+              event.preventDefault();
+              navigateHome();
+            }}
+          >
+            {home.navLabel}
+          </a>
+          <a
+            href="/#sortiment"
+            onClick={(event) => {
+              event.preventDefault();
+              navigateHome("sortiment");
+            }}
+          >
+            {t.nav.assortment}
+          </a>
+          <a
+            href="/kosik"
+            onClick={(event) => {
+              event.preventDefault();
+              navigateCart();
+            }}
+          >
+            {t.cartTitle}
+          </a>
+          <a
+            href="/kosik#agb"
+            onClick={(event) => {
+              event.preventDefault();
+              navigateCart("agb");
+            }}
+          >
+            {t.nav.terms}
+          </a>
         </nav>
         <div className="header-actions">
           <div className="language-switcher" aria-label={t.languageLabel}>
@@ -1337,341 +1704,425 @@ export default function Home() {
               </button>
             ))}
           </div>
-          <a className="header-cart" href="#warenkorb">
-            {t.cartTitle} {cartItems.length > 0 ? `(${cartItems.length})` : ""}
+          <a
+            className="header-cart"
+            href="/kosik"
+            onClick={(event) => {
+              event.preventDefault();
+              navigateCart();
+            }}
+          >
+            {t.cartTitle} {cartQuantity > 0 ? `(${cartQuantity})` : ""}
           </a>
         </div>
       </header>
 
       <main>
-        <section
-          className="home-hero"
-          id="start"
-          aria-labelledby="home-title"
-          style={
-            {
-              "--hero-image": "url('/products/christmas-baubles-main.jpeg')",
-            } as CSSProperties
-          }
-        >
-          <div className="home-hero-copy">
-            <p className="section-kicker">{home.eyebrow}</p>
-            <h1 id="home-title">{home.title}</h1>
-            <p>{home.lead}</p>
-            <div className="hero-actions">
-              <a className="hero-primary" href="#produkt">
-                {home.primaryCta}
-              </a>
-              <a className="hero-secondary" href="#sortiment">
-                {home.secondaryCta}
-              </a>
-            </div>
-            <div className="hero-highlights" aria-label={home.galleryLabel}>
-              {home.highlights.map((highlight) => (
-                <span key={highlight}>{highlight}</span>
-              ))}
-            </div>
-          </div>
-        </section>
+        {currentView === "home" && (
+          <>
+            <section
+              className="home-hero"
+              id="start"
+              aria-labelledby="home-title"
+              style={
+                {
+                  "--hero-image": "url('/products/christmas-baubles-main.jpeg')",
+                } as CSSProperties
+              }
+            >
+              <div className="home-hero-copy">
+                <p className="section-kicker">{home.eyebrow}</p>
+                <h1 id="home-title">{home.title}</h1>
+                <p>{home.lead}</p>
+                <div className="hero-actions">
+                  <a
+                    className="hero-primary"
+                    href={productHref(products[0].id)}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      selectProduct(products[0].id);
+                    }}
+                  >
+                    {home.primaryCta}
+                  </a>
+                  <a
+                    className="hero-secondary"
+                    href="/#sortiment"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      navigateHome("sortiment");
+                    }}
+                  >
+                    {home.secondaryCta}
+                  </a>
+                </div>
+                <div className="hero-highlights" aria-label={home.galleryLabel}>
+                  {home.highlights.map((highlight) => (
+                    <span key={highlight}>{highlight}</span>
+                  ))}
+                </div>
+              </div>
+            </section>
 
-        <section className="intro-gallery" aria-label={home.galleryLabel}>
-          {introPhotos.map((photo) => {
-            const product = getProduct(photo.productId);
-            const productCopy = product.translations[language];
+            <section className="intro-gallery" aria-label={home.galleryLabel}>
+              {introPhotos.map((photo) => {
+                const product = getProduct(photo.productId);
+                const productCopy = product.translations[language];
 
-            return (
-              <button
-                className="intro-photo"
-                key={photo.productId}
-                type="button"
-                onClick={() => selectProduct(product.id, true)}
+                return (
+                  <button
+                    className="intro-photo"
+                    key={photo.productId}
+                    type="button"
+                    onClick={() => selectProduct(product.id)}
+                  >
+                    <img src={photo.src} alt={productCopy.name} />
+                    <span>{productCopy.shortName}</span>
+                  </button>
+                );
+              })}
+            </section>
+
+            <section className="products-section" id="sortiment" aria-labelledby="sortiment-title">
+              <div className="section-heading">
+                <p className="section-kicker">{t.assortmentKicker}</p>
+                <h2 id="sortiment-title">{t.assortmentTitle}</h2>
+              </div>
+              <div className="product-card-grid">
+                {products.map((product) => renderProductCard(product, selectedProduct.id === product.id))}
+              </div>
+            </section>
+          </>
+        )}
+
+        {currentView === "product" && (
+          <>
+            <div className="page-toolbar">
+              <a
+                href="/"
+                onClick={(event) => {
+                  event.preventDefault();
+                  navigateHome();
+                }}
               >
-                <img src={photo.src} alt={productCopy.name} />
-                <span>{productCopy.shortName}</span>
+                {flow.backHome}
+              </a>
+              <button type="button" onClick={() => navigateCart()}>
+                {flow.goToCart}
               </button>
-            );
-          })}
-        </section>
-
-        <section className="product-section" id="produkt" aria-labelledby="product-title">
-          <div className="gallery-column">
-            <div className="product-photo-frame">
-              <img src={selectedPhoto.src} alt={selectedPhoto.alt[language]} />
-            </div>
-            <div className="thumb-row" aria-label={t.detailPhoto}>
-              {selectedProduct.photos.map((photo) => (
-                <button
-                  className={`thumb-button ${selectedPhoto.id === photo.id ? "active" : ""}`}
-                  key={photo.id}
-                  type="button"
-                  aria-pressed={selectedPhoto.id === photo.id}
-                  onClick={() => setSelectedPhotoId(photo.id)}
-                >
-                  <img src={photo.src} alt="" aria-hidden="true" />
-                  <span>
-                    {photo.id === selectedProduct.photos[0].id ? t.mainPhoto : t.detailPhoto}
-                  </span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="purchase-panel">
-            <p className="breadcrumbs">{t.breadcrumbs}</p>
-            <div className="product-switcher" aria-label={t.nav.assortment}>
-              {products.map((product) => (
-                <button
-                  className={selectedProduct.id === product.id ? "selected" : ""}
-                  key={product.id}
-                  type="button"
-                  aria-pressed={selectedProduct.id === product.id}
-                  onClick={() => selectProduct(product.id)}
-                >
-                  {product.translations[language].shortName}
-                </button>
-              ))}
             </div>
 
-            <p className="product-badge">{selectedProductCopy.badge}</p>
-            <h1 id="product-title">{selectedProductCopy.name}</h1>
-            <p className="product-lead">{selectedProductCopy.lead}</p>
-
-            <div className="purchase-meta">
-              <span>{selectedProductCopy.delivery}</span>
-              <span>{selectedProductCopy.material}</span>
-              <span>{selectedProductCopy.size}</span>
-              <span>{t.textLimit}</span>
-            </div>
-
-            <div className="price-row">
-              <span className="price">{formatPrice(selectedProduct.price, language)}</span>
-              <span className="tax-note">{t.taxNote}</span>
-            </div>
-
-            <form className="configurator" onSubmit={addToCart}>
-              <label className="field-group" htmlFor="custom-text">
-                <span>{t.customTextLabel}</span>
-                <input
-                  id="custom-text"
-                  maxLength={TEXT_LIMIT}
-                  value={customText}
-                  onChange={(event) => setCustomText(event.target.value.slice(0, TEXT_LIMIT))}
-                  placeholder={t.customTextPlaceholder}
-                />
-              </label>
-
-              <div className="field-group">
-                <span>{selectedProductCopy.finishLabel}</span>
-                <div
-                  className="color-grid"
-                  role="radiogroup"
-                  aria-label={selectedProductCopy.finishLabel}
-                >
-                  {selectedProduct.finishes.map((finish) => (
+            <section className="product-section" id="produkt" aria-labelledby="product-title">
+              <div className="gallery-column">
+                <div className="product-photo-frame">
+                  <img src={selectedPhoto.src} alt={selectedPhoto.alt[language]} />
+                </div>
+                <div className="thumb-row" aria-label={t.detailPhoto}>
+                  {selectedProduct.photos.map((photo) => (
                     <button
-                      className={`color-option ${
-                        selectedFinish.id === finish.id ? "selected" : ""
-                      }`}
-                      key={finish.id}
+                      className={`thumb-button ${selectedPhoto.id === photo.id ? "active" : ""}`}
+                      key={photo.id}
                       type="button"
-                      aria-pressed={selectedFinish.id === finish.id}
-                      onClick={() => setSelectedFinishId(finish.id)}
+                      aria-pressed={selectedPhoto.id === photo.id}
+                      onClick={() => setSelectedPhotoId(photo.id)}
                     >
-                      <span
-                        className="swatch"
-                        style={
-                          {
-                            "--swatch": finish.hex,
-                            "--swatch-edge": finish.edge,
-                          } as CSSProperties
-                        }
-                      />
-                      <span>{finish.label[language]}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="field-group">
-                <span>{t.logoLabel}</span>
-                <div className="logo-grid" role="radiogroup" aria-label={t.logoLabel}>
-                  {logoOptions.map((logo) => (
-                    <button
-                      className={`logo-option ${
-                        selectedLogo.id === logo.id ? "selected" : ""
-                      }`}
-                      key={logo.id}
-                      type="button"
-                      aria-pressed={selectedLogo.id === logo.id}
-                      onClick={() => setSelectedLogoId(logo.id)}
-                    >
-                      <span className="logo-symbol" aria-hidden="true">
-                        {logo.mark}
-                      </span>
-                      <span>{logo.label[language]}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="preview-row" aria-label={t.previewLabel}>
-                <div className={`engraving-card ${selectedProduct.previewClass}`}>
-                  <span className="preview-logo">{selectedLogo.mark}</span>
-                  <span className="preview-name" style={{ fontSize: previewNameSize }}>
-                    {previewText}
-                  </span>
-                </div>
-                <div>
-                  <strong>{selectedProductCopy.personalization}</strong>
-                  <span>
-                    {selectedFinish.label[language]} / {selectedLogo.label[language]}
-                  </span>
-                </div>
-              </div>
-
-              <div className="quantity-row">
-                <span>{t.quantity}</span>
-                <div className="stepper" aria-label={t.quantity}>
-                  <button
-                    type="button"
-                    aria-label={t.decreaseQuantity}
-                    onClick={() => setQuantity((current) => Math.max(1, current - 1))}
-                  >
-                    -
-                  </button>
-                  <output aria-live="polite">{quantity}</output>
-                  <button
-                    type="button"
-                    aria-label={t.increaseQuantity}
-                    onClick={() => setQuantity((current) => Math.min(12, current + 1))}
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-
-              <button className="primary-button" type="submit">
-                {t.addToCart}
-              </button>
-            </form>
-          </div>
-
-          <aside className="cart-summary" id="warenkorb" aria-label={t.cartTitle}>
-            <div>
-              <p className="section-kicker">{t.cartTitle}</p>
-              <h2>{t.cartHeading}</h2>
-            </div>
-            {cartItems.length === 0 ? (
-              <p className="empty-cart">{t.emptyCart}</p>
-            ) : (
-              <div className="cart-list" aria-live="polite">
-                {cartItems.map((item) => {
-                  const product = getProduct(item.productId);
-                  const finish = getFinish(item.productId, item.finishId);
-                  const logo = getLogo(item.logoId);
-
-                  return (
-                    <article className="cart-line" key={item.id}>
-                      <div>
-                        <strong>{product.translations[language].shortName}</strong>
-                        <span>
-                          {item.customText} / {logo.label[language]}
-                        </span>
-                        <span>{finish.label[language]}</span>
-                      </div>
+                      <img src={photo.src} alt="" aria-hidden="true" />
                       <span>
-                        {item.quantity} x {formatPrice(item.price, language)}
+                        {photo.id === selectedProduct.photos[0].id ? t.mainPhoto : t.detailPhoto}
                       </span>
-                    </article>
-                  );
-                })}
+                    </button>
+                  ))}
+                </div>
               </div>
-            )}
-            <div className="cart-total">
-              <span>{t.subtotal}</span>
-              <strong>{formatPrice(cartTotal, language)}</strong>
-            </div>
-            <button className="secondary-button" type="button" disabled>
-              {t.checkoutSoon}
-            </button>
-          </aside>
-        </section>
 
-        <section className="service-strip" aria-label="Service">
-          {t.service.map(([title, body]) => (
-            <div key={title}>
-              <strong>{title}</strong>
-              <span>{body}</span>
-            </div>
-          ))}
-        </section>
+              <div className="purchase-panel">
+                <p className="breadcrumbs">{t.breadcrumbs}</p>
+                <div className="product-switcher" aria-label={t.nav.assortment}>
+                  {products.map((product) => (
+                    <button
+                      className={selectedProduct.id === product.id ? "selected" : ""}
+                      key={product.id}
+                      type="button"
+                      aria-pressed={selectedProduct.id === product.id}
+                      onClick={() => selectProduct(product.id)}
+                    >
+                      {product.translations[language].shortName}
+                    </button>
+                  ))}
+                </div>
 
-        <section className="products-section" id="sortiment" aria-labelledby="sortiment-title">
-          <div className="section-heading">
-            <p className="section-kicker">{t.assortmentKicker}</p>
-            <h2 id="sortiment-title">{t.assortmentTitle}</h2>
-          </div>
-          <div className="product-card-grid">
-            {products.map((product) => {
-              const productCopy = product.translations[language];
+                <p className="product-badge">{selectedProductCopy.badge}</p>
+                <h1 id="product-title">{selectedProductCopy.name}</h1>
+                <p className="product-lead">{selectedProductCopy.lead}</p>
 
-              return (
-                <button
-                  className={`product-card ${selectedProduct.id === product.id ? "selected" : ""}`}
-                  key={product.id}
-                  type="button"
-                  aria-pressed={selectedProduct.id === product.id}
-                  onClick={() => selectProduct(product.id, true)}
-                >
-                  <img src={product.photos[0].src} alt={product.photos[0].alt[language]} />
-                  <div>
-                    <p className="section-kicker">{productCopy.category}</p>
-                    <h3>{productCopy.name}</h3>
-                    <p>{productCopy.personalization}</p>
+                <div className="purchase-meta">
+                  <span>{selectedProductCopy.delivery}</span>
+                  <span>{selectedProductCopy.material}</span>
+                  <span>{selectedProductCopy.size}</span>
+                  <span>{t.textLimit}</span>
+                </div>
+
+                <div className="price-row">
+                  <span className="price">{formatPrice(selectedProduct.price, language)}</span>
+                  <span className="tax-note">{t.taxNote}</span>
+                </div>
+
+                <form className="configurator" onSubmit={addToCart}>
+                  <label className="field-group" htmlFor="custom-text">
+                    <span>{t.customTextLabel}</span>
+                    <input
+                      id="custom-text"
+                      maxLength={TEXT_LIMIT}
+                      value={customText}
+                      onChange={(event) => setCustomText(event.target.value.slice(0, TEXT_LIMIT))}
+                      placeholder={t.customTextPlaceholder}
+                    />
+                  </label>
+
+                  <div className="field-group">
+                    <span>{selectedProductCopy.finishLabel}</span>
+                    <div
+                      className="color-grid"
+                      role="radiogroup"
+                      aria-label={selectedProductCopy.finishLabel}
+                    >
+                      {selectedProduct.finishes.map((finish) => (
+                        <button
+                          className={`color-option ${
+                            selectedFinish.id === finish.id ? "selected" : ""
+                          }`}
+                          key={finish.id}
+                          type="button"
+                          aria-pressed={selectedFinish.id === finish.id}
+                          onClick={() => setSelectedFinishId(finish.id)}
+                        >
+                          <span
+                            className="swatch"
+                            style={
+                              {
+                                "--swatch": finish.hex,
+                                "--swatch-edge": finish.edge,
+                              } as CSSProperties
+                            }
+                          />
+                          <span>{finish.label[language]}</span>
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                  <div className="card-bottom">
-                    <strong>{formatPrice(product.price, language)}</strong>
-                    <span className="card-action" aria-hidden="true">
-                      {t.selectProduct}
-                    </span>
+
+                  <div className="field-group">
+                    <span>{t.logoLabel}</span>
+                    <div className="logo-grid" role="radiogroup" aria-label={t.logoLabel}>
+                      {logoOptions.map((logo) => (
+                        <button
+                          className={`logo-option ${
+                            selectedLogo.id === logo.id ? "selected" : ""
+                          }`}
+                          key={logo.id}
+                          type="button"
+                          aria-pressed={selectedLogo.id === logo.id}
+                          onClick={() => setSelectedLogoId(logo.id)}
+                        >
+                          <span className="logo-symbol" aria-hidden="true">
+                            {logo.mark}
+                          </span>
+                          <span>{logo.label[language]}</span>
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </button>
-              );
-            })}
-          </div>
-        </section>
 
-        <section className="details-section" id="details" aria-labelledby="details-title">
-          <div className="section-heading">
-            <p className="section-kicker">{t.detailsKicker}</p>
-            <h2 id="details-title">{t.detailsTitle}</h2>
-          </div>
-          <div className="detail-columns">
-            {t.detailCards.map(([title, body]) => (
-              <article key={title}>
-                <h3>{title}</h3>
-                <p>{body}</p>
-              </article>
-            ))}
-          </div>
-        </section>
+                  <div className="preview-row" aria-label={t.previewLabel}>
+                    <div className={`engraving-card ${selectedProduct.previewClass}`}>
+                      <span className="preview-logo">{selectedLogo.mark}</span>
+                      <span className="preview-name" style={{ fontSize: previewNameSize }}>
+                        {previewText}
+                      </span>
+                    </div>
+                    <div>
+                      <strong>{selectedProductCopy.personalization}</strong>
+                      <span>
+                        {selectedFinish.label[language]} / {selectedLogo.label[language]}
+                      </span>
+                    </div>
+                  </div>
 
-        <section className="terms-section" id="agb" aria-labelledby="agb-title">
-          <div className="section-heading">
-            <p className="section-kicker">{t.termsKicker}</p>
-            <h2 id="agb-title">{t.termsTitle}</h2>
-          </div>
-          <div className="terms-grid">
-            {t.terms.map(([title, body]) => (
-              <article key={title}>
-                <h3>{title}</h3>
-                <p>{body}</p>
-              </article>
-            ))}
-          </div>
-          <p className="terms-note">{t.termsNote}</p>
-        </section>
+                  <div className="quantity-row">
+                    <span>{t.quantity}</span>
+                    <div className="stepper" aria-label={t.quantity}>
+                      <button
+                        type="button"
+                        aria-label={t.decreaseQuantity}
+                        onClick={() => setQuantity((current) => Math.max(1, current - 1))}
+                      >
+                        -
+                      </button>
+                      <output aria-live="polite">{quantity}</output>
+                      <button
+                        type="button"
+                        aria-label={t.increaseQuantity}
+                        onClick={() => setQuantity((current) => Math.min(12, current + 1))}
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  <button className="primary-button" type="submit">
+                    {t.addToCart}
+                  </button>
+                </form>
+              </div>
+
+              {renderCartSummary()}
+            </section>
+
+            <section
+              className="products-section related-section"
+              id="related-products"
+              aria-labelledby="related-title"
+            >
+              <div className="section-heading">
+                <p className="section-kicker">{t.assortmentKicker}</p>
+                <h2 id="related-title">{flow.otherProducts}</h2>
+              </div>
+              <div className="product-card-grid">
+                {products
+                  .filter((product) => product.id !== selectedProduct.id)
+                  .map((product) => renderProductCard(product))}
+              </div>
+            </section>
+          </>
+        )}
+
+        {currentView === "cart" && (
+          <>
+            <section className="cart-page" id="warenkorb" aria-labelledby="cart-page-title">
+              <div className="section-heading cart-page-heading">
+                <div>
+                  <p className="section-kicker">{flow.cartPageKicker}</p>
+                  <h1 id="cart-page-title">{flow.cartPageTitle}</h1>
+                </div>
+                <p>{flow.cartPageLead}</p>
+              </div>
+
+              <div className="cart-page-grid">
+                <div className="cart-page-list">
+                  {cartItems.length === 0 ? (
+                    <div className="empty-state">
+                      <p>{t.emptyCart}</p>
+                      <button type="button" onClick={() => navigateHome("sortiment")}>
+                        {flow.cartEmptyAction}
+                      </button>
+                    </div>
+                  ) : (
+                    cartItems.map((item) => {
+                      const product = getProduct(item.productId);
+                      const finish = getFinish(item.productId, item.finishId);
+                      const logo = getLogo(item.logoId);
+
+                      return (
+                        <article className="cart-page-line" key={item.id}>
+                          <img
+                            className="cart-line-photo"
+                            src={product.photos[0].src}
+                            alt={product.photos[0].alt[language]}
+                          />
+                          <div>
+                            <p className="section-kicker">
+                              {product.translations[language].category}
+                            </p>
+                            <h3>{product.translations[language].name}</h3>
+                            <span>
+                              {item.customText} / {logo.label[language]} /{" "}
+                              {finish.label[language]}
+                            </span>
+                          </div>
+                          <strong>
+                            {item.quantity} x {formatPrice(item.price, language)}
+                          </strong>
+                          <button
+                            className="remove-button"
+                            type="button"
+                            onClick={() => removeCartItem(item.id)}
+                          >
+                            {flow.removeItem}
+                          </button>
+                        </article>
+                      );
+                    })
+                  )}
+                </div>
+
+                <aside className="checkout-panel" aria-labelledby="checkout-title">
+                  <p className="section-kicker">{flow.checkoutTitle}</p>
+                  <h2 id="checkout-title">{t.subtotal}</h2>
+                  <strong className="checkout-total">{formatPrice(cartTotal, language)}</strong>
+                  <p>{flow.checkoutNote}</p>
+                  <button
+                    className="primary-button"
+                    type="button"
+                    disabled={cartItems.length === 0}
+                    onClick={() => setCheckoutMessage(true)}
+                  >
+                    {flow.checkoutCta}
+                  </button>
+                  {checkoutMessage && <p className="checkout-message">{flow.checkoutMessage}</p>}
+                </aside>
+              </div>
+            </section>
+
+            <section className="products-section" aria-labelledby="cart-more-title">
+              <div className="section-heading">
+                <p className="section-kicker">{t.assortmentKicker}</p>
+                <h2 id="cart-more-title">{flow.otherProducts}</h2>
+              </div>
+              <div className="product-card-grid">
+                {products.map((product) => renderProductCard(product, selectedProduct.id === product.id))}
+              </div>
+            </section>
+
+            <section className="terms-section" id="agb" aria-labelledby="agb-title">
+              <div className="section-heading">
+                <p className="section-kicker">{t.termsKicker}</p>
+                <h2 id="agb-title">{t.termsTitle}</h2>
+              </div>
+              <div className="terms-grid">
+                {t.terms.map(([title, body]) => (
+                  <article key={title}>
+                    <h3>{title}</h3>
+                    <p>{body}</p>
+                  </article>
+                ))}
+              </div>
+              <p className="terms-note">{t.termsNote}</p>
+            </section>
+          </>
+        )}
       </main>
+
+      {showCartChoice && (
+        <div className="cart-choice" role="dialog" aria-modal="true" aria-labelledby="cart-choice-title">
+          <div className="cart-choice-panel">
+            <p className="section-kicker">{t.cartTitle}</p>
+            <h2 id="cart-choice-title">{flow.addedTitle}</h2>
+            <p>{flow.addedBody}</p>
+            <div className="dialog-actions">
+              <button
+                className="secondary-button"
+                type="button"
+                onClick={() => setShowCartChoice(false)}
+              >
+                {flow.continueShopping}
+              </button>
+              <button className="primary-button" type="button" onClick={() => navigateCart()}>
+                {flow.goToCart}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <footer className="shop-footer" id="kontakt">
         <div>
@@ -1679,9 +2130,33 @@ export default function Home() {
           <span>{t.footerSubtitle}</span>
         </div>
         <div className="footer-links">
-          <a href="#produkt">{t.nav.configurator}</a>
-          <a href="#sortiment">{t.nav.assortment}</a>
-          <a href="#agb">{t.nav.terms}</a>
+          <a
+            href="/"
+            onClick={(event) => {
+              event.preventDefault();
+              navigateHome();
+            }}
+          >
+            {home.navLabel}
+          </a>
+          <a
+            href="/#sortiment"
+            onClick={(event) => {
+              event.preventDefault();
+              navigateHome("sortiment");
+            }}
+          >
+            {t.nav.assortment}
+          </a>
+          <a
+            href="/kosik"
+            onClick={(event) => {
+              event.preventDefault();
+              navigateCart();
+            }}
+          >
+            {t.cartTitle}
+          </a>
           <a href="mailto:hallo@example.de">hallo@example.de</a>
         </div>
       </footer>

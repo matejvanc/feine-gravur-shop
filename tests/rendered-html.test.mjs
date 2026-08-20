@@ -4,13 +4,13 @@ import test from "node:test";
 
 const templateRoot = new URL("../", import.meta.url);
 
-async function render() {
+async function render(path = "/") {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
   workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
   const { default: worker } = await import(workerUrl.href);
 
   return worker.fetch(
-    new Request("http://localhost/", {
+    new Request(`http://localhost${path}`, {
       headers: { accept: "text/html" },
     }),
     {
@@ -40,22 +40,42 @@ test("server-renders the multilingual personalized shop", async () => {
   assert.match(html, /Holz-Anhänger/);
   assert.match(html, /Holz-Flaschenöffner/);
   assert.match(html, /Holz-Kugelschreiber/);
-  assert.match(html, /Logo-Motiv/);
+  assert.match(html, /Produkt ansehen/);
+  assert.match(html, /\/produkt\/weihnachtskugeln/);
+  assert.match(html, /\/kosik/);
   assert.match(html, />DE</);
   assert.match(html, />EN</);
   assert.match(html, />CS</);
   assert.match(html, />FR</);
   assert.match(html, />IT</);
-  assert.match(html, /Text bis[\s\S]*12[\s\S]*Zeichen/);
-  assert.match(html, /Allgemeine Geschäftsbedingungen/);
-  assert.match(html, /In den Warenkorb/);
   assert.match(html, /Warenkorb/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|react-loading-skeleton/i);
 });
 
+test("fallback routes serve product and cart paths for client routing", async () => {
+  const productResponse = await render("/produkt/weihnachtskugeln");
+  assert.equal(productResponse.status, 200);
+  const productHtml = await productResponse.text();
+  assert.match(productHtml, /Feine Gravur/);
+  assert.match(productHtml, /Gravierte Weihnachtskugeln/);
+  assert.match(productHtml, /Logo-Motiv/);
+  assert.match(productHtml, /Text bis[\s\S]*12[\s\S]*Zeichen/);
+  assert.match(productHtml, /In den Warenkorb/);
+  assert.match(productHtml, /Weitere Produkte/);
+
+  const cartResponse = await render("/kosik");
+  assert.equal(cartResponse.status, 200);
+  const cartHtml = await cartResponse.text();
+  assert.match(cartHtml, /Warenkorb/);
+  assert.match(cartHtml, /Deine Auswahl/);
+  assert.match(cartHtml, /Checkout/);
+  assert.match(cartHtml, /Allgemeine Geschäftsbedingungen/);
+});
+
 test("starter preview files and dependencies are removed", async () => {
-  const [page, layout, packageJson] = await Promise.all([
+  const [page, routeFallback, layout, packageJson] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/[...path]/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
   ]);
@@ -66,18 +86,31 @@ test("starter preview files and dependencies are removed", async () => {
   assert.match(page, /language-switcher/);
   assert.match(page, /document\.documentElement\.lang = language/);
   assert.match(page, /const homeCopy/);
+  assert.match(page, /const flowCopy/);
+  assert.match(page, /initialPath/);
   assert.match(page, /intro-gallery/);
   assert.match(page, /scrollIntoView/);
   assert.match(page, /className={`product-card/);
+  assert.match(page, /productHref/);
+  assert.match(page, /parseRoute/);
+  assert.match(page, /feine-gravur-cart/);
+  assert.match(page, /showCartChoice/);
+  assert.match(page, /cart-choice/);
+  assert.match(page, /removeCartItem/);
+  assert.match(page, /cart-page/);
   assert.match(page, /Gravírované vánoční ozdoby/);
   assert.match(page, /Engraved Christmas Baubles/);
   assert.match(page, /Boules de Noël gravées/);
   assert.match(page, /Palline di Natale incise/);
   assert.match(page, /maxLength={TEXT_LIMIT}/);
+  assert.match(routeFallback, /CatchAllPage/);
+  assert.match(routeFallback, /initialPath/);
+  assert.match(layout, /Feine Gravur/);
   assert.doesNotMatch(page, /_sites-preview|SkeletonPreview|codex-preview/);
   assert.doesNotMatch(layout, /Starter Project|codex-preview/);
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);
 
   await access(new URL("../public/products/christmas-baubles-main.jpeg", import.meta.url));
+  await access(new URL("../app/[...path]/page.tsx", import.meta.url));
   await assert.rejects(access(new URL("app/_sites-preview", templateRoot)));
 });
